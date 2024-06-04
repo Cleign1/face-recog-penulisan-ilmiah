@@ -119,7 +119,7 @@ export const Sidebar = () => {
               Tentang
             </Link>
           </li>
-          <li className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-[#EEF7FF]">
+          <li className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-red-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
