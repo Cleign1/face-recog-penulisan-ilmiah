@@ -16,6 +16,13 @@ export default function Home() {
         >
           go to dosen
         </Link>
+        <Link
+          href="/admin"
+          className="border bg-white p-4 rounded-lg border-black"
+        >
+          {" "}
+          go to admin
+        </Link>
       </div>
     </main>
   );
