@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 
 const LoginPage = () => {
   return (
@@ -21,8 +22,8 @@ const LoginPage = () => {
           <div className="mb-6">
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
-              id="password"
-              type="password"
+              id="Password"
+              type="Password"
               placeholder="Password"
               required
             />
@@ -32,7 +33,9 @@ const LoginPage = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Login
+              <Link href="/siswa">
+                Masuk
+              </Link>
             </button>
           </div>
         </form>

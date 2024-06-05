@@ -4,7 +4,7 @@ export default function Dashboard() {
   return (
     <div>
       <Layout>
-        <h1 className="text-black">testing hihi</h1>
+        <h1 className="text-black">testing Dashboard</h1>
       </Layout>
     </div>
   );
