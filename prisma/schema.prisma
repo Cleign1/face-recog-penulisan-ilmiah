@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  role       String
+  createdAt  DateTime @map("created_at")
+}
+
+model DataSiswa {
+  id       Int      @id @default(autoincrement())
+  nama     String
+  npm      String   @unique
+  kelas    String
+  nomorHp  String   @map("nomor_hp")
+  presensi Presensi[]
+}
+
+model DataDosen {
+  id      Int      @id @default(autoincrement())
+  nama    String   @unique
+  nidn    String
+  nomorHp String   @map("nomor_hp")
+  matkul  MataKuliah[]
+}
+
+model MataKuliah {
+  id             Int        @id @default(autoincrement())
+  dosen          String
+  kodeMataKuliah String     @unique @map("kode_mata_kuliah")
+  namaMataKuliah String     @map("nama_mata_kuliah")
+  dosenNama      DataDosen  @relation(fields: [dosen], references: [nama])
+}
+
+model Presensi {
+  id         Int      @id @default(autoincrement())
+  tanggal    DateTime @default(now()) @db.Timestamptz(6)
+  nama       String
+  npm        String
+  sudahAbsen Boolean  @map("sudah_absen")
+  waktuAbsen DateTime @map("waktu_absen")
+  siswa      DataSiswa @relation(fields: [npm], references: [npm])
+}
+
+
