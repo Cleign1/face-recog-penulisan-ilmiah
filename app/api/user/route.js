@@ -26,7 +26,7 @@ export async function POST(req) {
         const { username, email, password, role } = body;
 
         // Validate role
-        const validRoles = ['admin', 'siswa', 'dosen'];
+        const validRoles = ['siswa', 'dosen'];
         if (!validRoles.includes(role)) {
             return NextResponse.json({
                 user: null,
