@@ -63,7 +63,7 @@ export default function Daftar() {
 
       if (response.ok) {
         alert("User berhasil dibuat!");
-        router.push('/login')
+        router.push("/login");
       } else {
         alert(result.message || "Terjadi Kesalahan pada saat membuat user");
       }

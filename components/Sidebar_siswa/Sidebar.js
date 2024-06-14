@@ -6,17 +6,19 @@ import gunadarma from "@/src/gunadarma.png";
 export const Sidebar = () => {
   return (
     <div className="bg-[#7AB2B2] h-screen px-4 pt-8 justify-between flex-col w-80">
-      <div className="flex items-center justify-center h-20 p-5">
-        <Image
-          src={gunadarma}
-          width={100}
-          alt="gambar gunadarma"
-          className="p-4"
-        />
-        <Link href="/" suppressHydrationWarning={true} className="text-xl">
-          Aplikasi Presensi
-        </Link>
-      </div>
+      <Link href='/siswa'>
+        <div className="flex items-center justify-center h-20 p-5">
+          <Image
+            src={gunadarma}
+            width={100}
+            alt="gambar gunadarma"
+            className="p-4"
+          />{" "}
+          <div suppressHydrationWarning={true} className="text-xl">
+            Aplikasi Presensi
+          </div>
+        </div>
+      </Link>
       <nav className="pt-10">
         <ul className="space-y-5">
           <li className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-[#EEF7FF]">
