@@ -1,8 +1,8 @@
 "use client";
 
 import Head from "next/head";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 
@@ -21,6 +21,8 @@ const LoginSchema = z.object({
 const LoginPage = () => {
   const router = useRouter();
 
+  const { data: session, status } = useSession();
+
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -31,6 +33,20 @@ const LoginPage = () => {
     status: "",
     message: "",
   });
+
+  useEffect(() => {
+
+    if (session?.user?.role) {
+      if (session.user.role === "siswa") {
+        router.push("/siswa");
+      } else if (session.user.role === "dosen") {
+        router.push("/dosen");
+      } else if (session.user.role === "admin") {
+        router.push("/admin");
+      }
+    }
+
+  }, [session, router]);
 
   const onChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -48,10 +64,9 @@ const LoginPage = () => {
         password: loginData.password,
       });
 
-      if (result.ok) {
+      if (result?.ok) {
         setAlert({ status: "success", message: "Masuk berhasil" });
         setLoginData({ username: "", password: "" });
-        router.push("/");
       } else {
         setAlert({ status: "error", message: "Masuk gagal" });
       }
@@ -68,6 +83,12 @@ const LoginPage = () => {
     }
   };
 
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
       <Head>
@@ -76,11 +97,7 @@ const LoginPage = () => {
       <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
         <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
         {alert.message && (
-          <div
-            className={`alert ${
-              alert.status === "error" ? "alert-danger" : "alert-success"
-            }`}
-          >
+          <div className={`alert ${alert.status === "error" ? "alert-danger" : "alert-success"}`}>
             {alert.message}
           </div>
         )}
