@@ -33,14 +33,14 @@ model DataSiswa {
 model DataDosen {
   id      Int      @id @default(autoincrement())
   nama    String   @unique
-  nidn    String
+  nidn    String   @unique
   nomorHp String   @map("nomor_hp")
   matkul  MataKuliah[]
 }
 
 model MataKuliah {
   id             Int        @id @default(autoincrement())
-  dosen          String
+  dosen          String     @unique
   kodeMataKuliah String     @unique @map("kode_mata_kuliah")
   namaMataKuliah String     @map("nama_mata_kuliah")
   dosenNama      DataDosen  @relation(fields: [dosen], references: [nama])
@@ -50,7 +50,7 @@ model Presensi {
   id         Int      @id @default(autoincrement())
   tanggal    DateTime @default(now()) @db.Timestamptz(6)
   nama       String
-  npm        String
+  npm        String   @unique
   sudahAbsen Boolean  @map("sudah_absen")
   waktuAbsen DateTime @map("waktu_absen")
   siswa      DataSiswa @relation(fields: [npm], references: [npm])
