@@ -1,6 +1,24 @@
 import { db } from "@/app/lib/db";
 import { hash } from "bcrypt";
 import { NextResponse } from "next/server";
+import * as z from "zod";
+
+const userSchema = z.object({
+    username: z
+        .string()
+        .min(3, { message: "Username minimal 3 karakter!" })
+        .max(25, { message: "Username maksimal 25 karakter!" }),
+    email: z
+        .string()
+        .min(3, { message: "Email minimal 3 karakter!" })
+        .max(50, { message: "Email maksimal 50 karakter!" })
+        .email({ message: "Email tidak valid!" }),
+    password: z
+        .string()
+        .min(6, { message: "Password minimal 6 karakter!" })
+        .max(50, { message: "Password maksimal 50 karakter!" }),
+    role: z.enum(['admin', 'siswa', 'dosen'])
+});
 
 export async function POST(req) {
     try {
@@ -54,7 +72,9 @@ export async function POST(req) {
             }
         });
 
-        return NextResponse.json({ user: newUser, message: "User berhasil dibuat!" }, { status: 200 });
+        const { password: newUserPassword, ...rest } = newUser;
+
+        return NextResponse.json({ user: rest, message: "User berhasil dibuat!" }, { status: 200 });
     } catch (error) {
         console.error("Error creating user:", error);
         return NextResponse.json({
