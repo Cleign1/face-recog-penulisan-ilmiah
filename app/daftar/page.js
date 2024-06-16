@@ -61,9 +61,11 @@ export default function Daftar() {
       });
 
       const result = await response.json();
-      if (response.ok) {
+      if (response?.ok) {
         toast.success("User berhasil dibuat");
-        router.push("/login");
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
       } else {
         toast.error("Terjadi Kesalahan pada saat membuat user");
       }
