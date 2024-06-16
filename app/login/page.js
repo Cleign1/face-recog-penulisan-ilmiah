@@ -6,7 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginSchema = z.object({
   username: z
@@ -22,22 +22,13 @@ const LoginSchema = z.object({
 
 const LoginPage = () => {
   const router = useRouter();
-
   const { data: session, status } = useSession();
-
-  const [loginData, setLoginData] = useState({
-    username: "",
-    password: "",
-  });
-
+  const [loginData, setLoginData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({});
-  const [alert, setAlert] = useState({
-    status: "",
-    message: "",
-  });
+  const [alert, setAlert] = useState({ status: "", message: "" });
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
-
     if (session?.user?.role) {
       if (session.user.role === "siswa") {
         router.push("/siswa");
@@ -47,7 +38,6 @@ const LoginPage = () => {
         router.push("/admin");
       }
     }
-
   }, [session, router]);
 
   const onChange = (e) => {
@@ -59,6 +49,7 @@ const LoginPage = () => {
     try {
       LoginSchema.parse(loginData);
       setErrors({});
+      setIsClicked(true);
 
       const result = await signIn("credentials", {
         redirect: false,
@@ -72,7 +63,7 @@ const LoginPage = () => {
         setLoginData({ username: "", password: "" });
       } else {
         // setAlert({ status: "error", message: "Masuk gagal" });
-        toast.error("Masuk Gagal")
+        toast.error("Masuk Gagal");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -83,7 +74,7 @@ const LoginPage = () => {
         setErrors(fieldErrors);
       } else {
         // setAlert({ status: "error", message: "Something went wrong" });
-        toast.error("Something went wrong")
+        toast.error("Something went wrong");
       }
     }
   };
@@ -92,18 +83,20 @@ const LoginPage = () => {
     return <div>Loading...</div>;
   }
 
-
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
       <Head>
         <title>Login Page</title>
       </Head>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
         <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
         {alert.message && (
-          <div className={`alert ${alert.status === "error" ? "alert-danger" : "alert-success"}`}>
+          <div
+            className={`alert ${
+              alert.status === "error" ? "alert-danger" : "alert-success"
+            }`}
+          >
             {alert.message}
           </div>
         )}
@@ -141,8 +134,11 @@ const LoginPage = () => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+              className={`${
+                isClicked ? "bg-green-500" : "bg-blue-500"
+              } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out`}
               type="submit"
+              onClick={() => setIsClicked(true)}
             >
               Masuk
             </button>
