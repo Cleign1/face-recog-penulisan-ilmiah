@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginSchema = z.object({
   username: z
@@ -65,10 +67,12 @@ const LoginPage = () => {
       });
 
       if (result?.ok) {
-        setAlert({ status: "success", message: "Masuk berhasil" });
+        // setAlert({ status: "success", message: "Masuk berhasil" });
+        toast.success("Masuk Berhasil");
         setLoginData({ username: "", password: "" });
       } else {
-        setAlert({ status: "error", message: "Masuk gagal" });
+        // setAlert({ status: "error", message: "Masuk gagal" });
+        toast.error("Masuk Gagal")
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -78,7 +82,8 @@ const LoginPage = () => {
         }, {});
         setErrors(fieldErrors);
       } else {
-        setAlert({ status: "error", message: "Something went wrong" });
+        // setAlert({ status: "error", message: "Something went wrong" });
+        toast.error("Something went wrong")
       }
     }
   };
@@ -94,6 +99,7 @@ const LoginPage = () => {
       <Head>
         <title>Login Page</title>
       </Head>
+      <ToastContainer/>
       <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
         <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
         {alert.message && (
@@ -135,7 +141,7 @@ const LoginPage = () => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
               type="submit"
             >
               Masuk
