@@ -52,7 +52,7 @@ const LoginPage = () => {
       setIsClicked(true);
 
       const result = await signIn("credentials", {
-        redirect: false,
+        // redirect: false,
         username: loginData.username,
         password: loginData.password,
       });
@@ -61,6 +61,15 @@ const LoginPage = () => {
         // setAlert({ status: "success", message: "Masuk berhasil" });
         toast.success("Masuk Berhasil");
         setLoginData({ username: "", password: "" });
+        setTimeout(() => {
+          if (session?.user?.role === "siswa") {
+            router.push("/siswa");
+          } else if (session?.user?.role === "dosen") {
+            router.push("/dosen");
+          } else if (session?.user?.role === "admin") {
+            router.push("/admin");
+          }
+        }, 5000); // Delay for 2 seconds
       } else {
         // setAlert({ status: "error", message: "Masuk gagal" });
         toast.error("Masuk Gagal");
@@ -79,10 +88,6 @@ const LoginPage = () => {
     }
   };
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
       <Head>
@@ -92,11 +97,9 @@ const LoginPage = () => {
       <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
         <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
         {alert.message && (
-          <div
-            className={`alert ${
+          <div className={`alert ${
               alert.status === "error" ? "alert-danger" : "alert-success"
-            }`}
-          >
+            }`}>
             {alert.message}
           </div>
         )}
