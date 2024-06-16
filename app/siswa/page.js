@@ -18,7 +18,8 @@ export default function Dashboard() {
     <div>
       <Layout>
         <div className="p-6">
-          <h1 className="text-black text-2xl">Selamat datang {session.user.username}</h1>
+          <h1 className="text-black text-2xl">Selamat datang {session.user?.username} !</h1>
+
         </div>
       </Layout>
     </div>
