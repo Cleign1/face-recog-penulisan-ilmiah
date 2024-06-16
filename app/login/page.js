@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster, toast } from "sonner";
+
 
 const LoginSchema = z.object({
   username: z
@@ -60,17 +60,14 @@ const LoginPage = () => {
       if (result?.ok) {
         // setAlert({ status: "success", message: "Masuk berhasil" });
         toast.success("Masuk Berhasil");
-        localStorage.setItem('username', loginData.username);
         setLoginData({ username: "", password: "" });
-        setTimeout(() => {
-          if (session?.user?.role === "siswa") {
-            router.push("/siswa");
-          } else if (session?.user?.role === "dosen") {
-            router.push("/dosen");
-          } else if (session?.user?.role === "admin") {
-            router.push("/admin");
-          }
-        }, 5000); // Delay for 2 seconds
+        if (session?.user?.role === "siswa") {
+          router.push("/siswa");
+        } else if (session?.user?.role === "dosen") {
+          router.push("/dosen");
+        } else if (session?.user?.role === "admin") {
+          router.push("/admin");
+        }
       } else {
         // setAlert({ status: "error", message: "Masuk gagal" });
         toast.error("Masuk Gagal");
@@ -90,77 +87,79 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
-      <Head>
-        <title>Login Page</title>
-      </Head>
-      <ToastContainer />
-      <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
-        <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
-        {alert.message && (
-          <div className={`alert ${
-              alert.status === "error" ? "alert-danger" : "alert-success"
-            }`}>
-            {alert.message}
-          </div>
-        )}
-        <form onSubmit={onSubmit}>
-          <div className="mb-4">
-            <label htmlFor="username">Username</label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
-              name="username"
-              type="text"
-              placeholder="Username"
-              onChange={onChange}
-              value={loginData.username}
-              required
-            />
-            {errors.username && (
-              <p className="text-red-500 text-xs">{errors.username}</p>
-            )}
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password">Kata Sandi</label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
-              name="password"
-              type="password"
-              value={loginData.password}
-              onChange={onChange}
-              placeholder="Kata Sandi"
-              autoComplete="current-password"
-              required
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs">{errors.password}</p>
-            )}
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              className={`${
-                isClicked ? "bg-green-500" : "bg-blue-500"
-              } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out`}
-              type="submit"
-              onClick={() => setIsClicked(true)}
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
+        <Toaster richColors />
+        <Head>
+          <title>Login Page</title>
+        </Head>
+        <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
+          <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
+          {alert.message && (
+            <div
+              className={`alert ${
+                alert.status === "error" ? "alert-danger" : "alert-success"
+              }`}
             >
-              Masuk
-            </button>
+              {alert.message}
+            </div>
+          )}
+          <form onSubmit={onSubmit}>
+            <div className="mb-4">
+              <label htmlFor="username">Username</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
+                name="username"
+                type="text"
+                placeholder="Username"
+                onChange={onChange}
+                value={loginData.username}
+                required
+              />
+              {errors.username && (
+                <p className="text-red-500 text-xs">{errors.username}</p>
+              )}
+            </div>
+            <div className="mb-6">
+              <label htmlFor="password">Kata Sandi</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
+                name="password"
+                type="password"
+                value={loginData.password}
+                onChange={onChange}
+                placeholder="Kata Sandi"
+                autoComplete="current-password"
+                required
+              />
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
+            </div>
+            <div className="flex items-center justify-center">
+              <button
+                className={`${
+                  isClicked ? "bg-green-500" : "bg-blue-500"
+                } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out`}
+                type="submit"
+                onClick={() => setIsClicked(true)}
+              >
+                Masuk
+              </button>
+            </div>
+          </form>
+          <div className="mt-4 text-center">
+            <p className="text-gray-700">
+              Belum punya akun?
+              <button
+                className="ml-1 text-blue-500 hover:text-blue-700 font-semibold focus:outline-none"
+                onClick={() => router.push("/daftar")}
+              >
+                Daftar disini
+              </button>
+            </p>
           </div>
-        </form>
-        <div className="mt-4 text-center">
-          <p className="text-gray-700">
-            Belum punya akun?
-            <button
-              className="ml-1 text-blue-500 hover:text-blue-700 font-semibold focus:outline-none"
-              onClick={() => router.push("/daftar")}
-            >
-              Daftar disini
-            </button>
-          </p>
         </div>
       </div>
-    </div>
   );
 };
 
