@@ -9,7 +9,7 @@ import { signOut } from "next-auth/react";
 export const SidebarAdmin = () => {
   return (
     <div className="bg-[#7AB2B2] h-screen px-4 pt-8 justify-between flex-col w-80">
-      <Link href='/admin'>
+      <Link href='/'>
       <div className="flex items-center justify-center h-20 p-5">
         <Image
           src={gunadarma}
