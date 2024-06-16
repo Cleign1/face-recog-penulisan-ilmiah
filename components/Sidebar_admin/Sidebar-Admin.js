@@ -1,7 +1,10 @@
+'use client';
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gunadarma from "@/src/gunadarma.png";
+import { signOut } from "next-auth/react";
 
 export const SidebarAdmin = () => {
   return (
@@ -161,6 +164,10 @@ export const SidebarAdmin = () => {
             </Link>
           </li>
           <li className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-red-500">
+            <button 
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="text-xl flex items-center"
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -175,9 +182,8 @@ export const SidebarAdmin = () => {
                 d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
               />
             </svg>
-            <Link href="/login" className="text-xl">
               Keluar
-            </Link>
+            </button>
           </li>
         </ul>
       </nav>
