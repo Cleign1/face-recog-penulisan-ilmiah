@@ -60,6 +60,7 @@ const LoginPage = () => {
       if (result?.ok) {
         // setAlert({ status: "success", message: "Masuk berhasil" });
         toast.success("Masuk Berhasil");
+        localStorage.setItem('username', loginData.username);
         setLoginData({ username: "", password: "" });
         setTimeout(() => {
           if (session?.user?.role === "siswa") {
