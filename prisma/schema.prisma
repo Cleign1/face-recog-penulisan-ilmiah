@@ -28,6 +28,7 @@ model DataSiswa {
   npm      String   @unique
   kelas    String
   nomorHp  String   @map("nomor_hp")
+  alamat   String
   presensi Presensi[]
 }
 
