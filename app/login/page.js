@@ -7,7 +7,6 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 
-
 const LoginSchema = z.object({
   username: z
     .string()
@@ -28,17 +27,17 @@ const LoginPage = () => {
   const [alert, setAlert] = useState({ status: "", message: "" });
   const [isClicked, setIsClicked] = useState(false);
 
-  // useEffect(() => {
-  //   if (session?.user?.role) {
-  //     if (session.user.role === "siswa") {
-  //       router.push("/siswa");
-  //     } else if (session.user.role === "dosen") {
-  //       router.push("/dosen");
-  //     } else if (session.user.role === "admin") {
-  //       router.push("/admin");
-  //     }
-  //   }
-  // }, [session, router]);
+  useEffect(() => {
+    if (session?.user?.role) {
+      if (session.user.role === "siswa") {
+        router.push("/siswa");
+      } else if (session.user.role === "dosen") {
+        router.push('/dosen');
+      } else if (session.user.role === "admin") {
+        router.push('/admin');
+      }
+    }
+  }, [session, router]);
 
   const onChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -62,12 +61,12 @@ const LoginPage = () => {
         toast.success("Masuk Berhasil");
         setLoginData({ username: "", password: "" });
         setTimeout(() => {
-          if (session?.user?.role === "siswa") {
-            router.push("/siswa");
-          } else if (session?.user?.role === "dosen") {
-            router.push("/dosen");
-          } else if (session?.user?.role === "admin") {
-            router.push("/admin");
+          if (session.user.role === "siswa") {
+            router.push('/siswa');
+          } else if (session.user.role === "dosen") {
+            router.push('/dosen');
+          } else if (session.user.role === "admin") {
+            router.push('/admin');
           }
         }, 10000)
       } else {

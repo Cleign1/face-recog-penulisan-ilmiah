@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   useEffect(() => {
     if (session?.user?.role) {
       if (session.user.role === "siswa") {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
@@ -35,6 +35,10 @@ export default function Daftar() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    setHostname(window.location.hostname);
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -52,7 +56,7 @@ export default function Daftar() {
       setErrors({});
 
       // Send data to the backend
-      const response = await fetch("/api/user", {
+      const response = await fetch(`${hostname}/api/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +68,7 @@ export default function Daftar() {
       if (response?.ok) {
         toast.success("User berhasil dibuat");
         setTimeout(() => {
-          router.push("/login");
+          router.push('/login');
         }, 3000);
       } else {
         toast.error("Terjadi Kesalahan pada saat membuat user");
