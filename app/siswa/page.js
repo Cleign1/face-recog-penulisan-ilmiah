@@ -8,17 +8,23 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return <div className="items-center text-center p-96 text-2xl">Loading...</div>;
+    return (
+      <div className="items-center text-center p-96 text-2xl">Loading...</div>
+    );
   }
 
   if (status === "unauthenticated") {
-    return <div className="items-center text-center p-96 text-2xl">Not authenticated</div>;
+    return (
+      <div className="items-center text-center p-96 text-2xl">
+        Not authenticated
+      </div>
+    );
   }
 
   return (
     <div>
       <Layout>
-      <div className="w-full max-w-4xl p-6 text-black">
+        <div className="w-full max-w-4xl p-6 text-black">
           <h1 className="text-2xl font-bold mb-8">
             Selamat Datang, {session.user?.username} !
           </h1>
@@ -50,14 +56,16 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {Array(6).fill(0).map((_, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2 px-4">####</td>
-                  <td className="py-2 px-4">####</td>
-                  <td className="py-2 px-4">####</td>
-                  <td className="py-2 px-4">####</td>
-                </tr>
-              ))}
+              {Array(6)
+                .fill(0)
+                .map((_, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-2 px-4">####</td>
+                    <td className="py-2 px-4">####</td>
+                    <td className="py-2 px-4">####</td>
+                    <td className="py-2 px-4">####</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
