@@ -3,7 +3,6 @@ import { Layout } from "@/components/Sidebar_siswa/Layout";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
