@@ -1,13 +1,8 @@
 // pages/students.js
+"use client";
+
 import { Layout } from "@/components/Sidebar_siswa/Layout";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Head from "next/head";
 
 const students = [
   { id: 1, name: "Aldo Rizky Ramadhan", npm: 50421106, class: "3IA15" },
@@ -25,28 +20,31 @@ export default function Kelas() {
   return (
     <div>
       <Layout>
-        <div className="p-6 text-black">
-          <h1 className="text-black text-2xl font-bold mb-4">Kelas 3IA15</h1>
-          <Table>
-            <TableHeader>
-              <TableRow className="text-lg">
-                <TableHead className="w-[100px]">Id</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead>NPM</TableHead>
-                <TableHead>Kelas</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="text-lg">
+        <Head>
+          <title>Kelas 3IA15</title>
+        </Head>
+        <div className="w-full max-w-4xl p-6 text-black">
+          <h1 className="text-2xl font-bold mb-8">Kelas 3IA15</h1>
+          <table className="w-full bg-white rounded shadow">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4">Id</th>
+                <th className="py-2 px-4">Nama</th>
+                <th className="py-2 px-4">NPM</th>
+                <th className="py-2 px-4">Kelas</th>
+              </tr>
+            </thead>
+            <tbody>
               {students.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.id}</TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.npm}</TableCell>
-                  <TableCell>{student.class}</TableCell>
-                </TableRow>
+                <tr key={student.id} className="border-t">
+                  <td className="py-2 px-4">{student.id}</td>
+                  <td className="py-2 px-4">{student.name}</td>
+                  <td className="py-2 px-4">{student.npm}</td>
+                  <td className="py-2 px-4">{student.class}</td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </Layout>
     </div>
