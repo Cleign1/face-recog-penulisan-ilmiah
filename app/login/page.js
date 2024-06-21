@@ -147,17 +147,6 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
-        <div className="mt-4 text-center">
-          <p className="text-gray-700">
-            Belum punya akun?
-            <button
-              className="ml-1 text-blue-500 hover:text-blue-700 font-semibold focus:outline-none"
-              onClick={() => router.push("/daftar")}
-            >
-              Daftar disini
-            </button>
-          </p>
-        </div>
       </div>
     </div>
   );
