@@ -2,6 +2,7 @@
 
 import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
 import { Table } from "@/components/ui/table";
+import Link from "next/link";
 
 const attendanceData = [
   { id: 1, name: "Aldo Rizky", npm: 50421, class: "3IA15", time: "10.00" },
@@ -44,7 +45,11 @@ export default function DataPresensi() {
             </tbody>
           </Table>
           <div className="mt-6">
-            <button className="bg-gray-300 px-4 py-2 rounded">Tambah Absen Manual</button>
+            <button className="bg-gray-300 px-4 py-2 rounded">
+              <Link href='/dosen/datapresensi/absen'>
+              Tambah Absen Manual
+              </Link>
+              </button>
           </div>
         </div>
       </LayoutDosen>
