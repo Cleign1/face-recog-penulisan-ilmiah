@@ -28,7 +28,7 @@ export default function DashboardDosen() {
         <Head>
           <title>Dosen Dashboard</title>
         </Head>
-        <div className="w-full max-w-4xl p-6 text-black">
+        <div className=" p-6 text-black">
           <h1 className="text-2xl font-bold mb-8">
             Selamat Datang, {session.user?.username}!
           </h1>
