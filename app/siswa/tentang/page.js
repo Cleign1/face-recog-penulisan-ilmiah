@@ -7,7 +7,7 @@ export default function Tentang() {
         <div className="p-6">
           <div className=" p-8 text-black">
             <div className="max-w-2xl mx-auto p-10 border-4 rounded-3xl border-black">
-              <h1 className="text-4xl font-bold mb-4">About This Project</h1>
+              <h1 className="text-4xl font-bold mb-4">Tentang Proyek ini</h1>
               <p className="text-lg mb-6">
                 Nama : Muhamad Ibnu Khaidar Hafiz <br />
                 Kelas : 3IA15 <br />
