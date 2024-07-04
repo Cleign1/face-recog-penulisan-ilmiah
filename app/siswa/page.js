@@ -37,7 +37,7 @@ export default function Dashboard() {
         </Head>
         <div className="w-full max-w-4xl p-6 text-black">
           <h1 className="text-2xl font-bold mb-8">
-            Selamat Datang, {session.user?.username} !
+            Selamat Datang, Siswa {session.user?.username} !
           </h1>
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
