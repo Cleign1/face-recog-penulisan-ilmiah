@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as faceapi from '@vladmandic/face-api/dist/face-api.esm.js';
 import Webcam from 'react-webcam';
 import { loadModels, detectFaces } from '@/lib/faceapi';
+import { toast, Toaster } from 'sonner';
 
 const FaceRecognition = ({ registeredFaces }) => {
   const webcamRef = useRef(null);
@@ -39,20 +40,15 @@ const FaceRecognition = ({ registeredFaces }) => {
         const detections = await detectFaces(video);
 
         if (detections.length === 0) {
-          console.warn('No faces detected');
+          toast.warning("Tidak ada wajah yang terdeteksi");
           return;
         }
 
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
         // Clear the canvas before drawing
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw bounding boxes around detected faces
-        faceapi.draw.drawDetections(canvas, resizedDetections);
-
-        // Draw landmarks around detected faces
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Face recognition logic
         const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(
@@ -64,16 +60,9 @@ const FaceRecognition = ({ registeredFaces }) => {
 
         resizedDetections.forEach((detection) => {
           const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
-          const { box } = detection.detection;
 
-          // Ensure the box dimensions are valid
-          if (box && box.width && box.height && box.x !== null && box.y !== null) {
-            const label = bestMatch.label === 'unknown' ? 'tidak diketahui' : bestMatch.toString();
-            const drawBox = new faceapi.draw.DrawBox(box, { label });
-            drawBox.draw(canvas);
-          } else {
-            console.warn('Invalid bounding box dimensions', box);
-          }
+          // Here you can add logic for recognized faces if needed
+
         });
       }, 100);
 
@@ -83,6 +72,7 @@ const FaceRecognition = ({ registeredFaces }) => {
 
   return (
     <div className="relative w-full h-full">
+      <Toaster richColors />
       <Webcam
         audio={false}
         ref={webcamRef}
