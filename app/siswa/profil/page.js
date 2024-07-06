@@ -8,7 +8,10 @@ export default function Profil() {
           <h1 className="text-4xl font-bold mb-8 text-black">Data Diri</h1>
           <form className="w-full max-w-lg bg-white p-8 rounded shadow">
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="npm">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="npm"
+              >
                 NPM
               </label>
               <input
@@ -19,7 +22,10 @@ export default function Profil() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nama">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="nama"
+              >
                 Nama
               </label>
               <input
@@ -30,7 +36,10 @@ export default function Profil() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="alamat">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="alamat"
+              >
                 Alamat
               </label>
               <input
@@ -41,7 +50,10 @@ export default function Profil() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="kelas">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="kelas"
+              >
                 Kelas
               </label>
               <input
@@ -52,7 +64,10 @@ export default function Profil() {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nomor_hp">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="nomor_hp"
+              >
                 Nomor HP
               </label>
               <input

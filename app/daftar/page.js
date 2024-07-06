@@ -35,9 +35,9 @@ export default function Daftar() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    setHostname(window.location.hostname);
-  }, []);
+  // useEffect(() => {
+  //   setHostname(window.location.hostname);
+  // }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
