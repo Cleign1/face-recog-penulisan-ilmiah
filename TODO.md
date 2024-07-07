@@ -17,8 +17,8 @@
 
 ## Debugging
 - fix this warning
-  ```bash⚠ ./node_modules/.pnpm/@vladmandic+face-api@1.7.13/node_modules/@vladmandic/face-api/dist/face-api.esm.js
-Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+``` bash
+⚠ ./node_modules/.pnpm/@vladmandic+face-api@1.7.13/node_modules/@vladmandic/face-api/dist/face-api.esm.js Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
 
 Import trace for requested module:
 ./node_modules/.pnpm/@vladmandic+face-api@1.7.13/node_modules/@vladmandic/face-api/dist/face-api.esm.js
