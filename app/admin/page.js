@@ -26,14 +26,9 @@ export default function DashboardAdmin() {
       <LayoutAdmin>
         <div className="p-6 text-black">
           <h1 className="text-2xl font-bold mb-8 ">
-            Selamat Datang, {session.user?.username}!
+            Selamat Datang, di panel {session.user?.username}!
           </h1>
           <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">🎓</div>
-              <div className="text-xl font-semibold">Mata Kuliah</div>
-              <div className="text-2xl mt-2">6</div>
-            </div>
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">🎓</div>
               <div className="text-xl font-semibold">Kelas</div>
@@ -42,6 +37,11 @@ export default function DashboardAdmin() {
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">👥</div>
               <div className="text-xl font-semibold">Total Siswa</div>
+              <div className="text-2xl mt-2">32</div>
+            </div>
+            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
+              <div className="text-4xl mb-2">👥</div>
+              <div className="text-xl font-semibold">Total Dosen</div>
               <div className="text-2xl mt-2">32</div>
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
