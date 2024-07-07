@@ -124,7 +124,7 @@ export const SidebarAdmin = () => {
               <span className="text-xl ml-2">Data Presensi</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link href="/admin/datakelas" className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-[#EEF7FF]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +142,7 @@ export const SidebarAdmin = () => {
               </svg>
               <span className="text-xl ml-2">Data Kelas</span>
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link href="/admin/tentang" className="flex items-center justify-center border rounded-lg bg-[#CDE8E5] p-2 hover:bg-[#EEF7FF]">
               <svg
