@@ -90,8 +90,8 @@ const DataSiswa = () => {
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="py-2 cursor-pointer" onClick={() => handleSort('nama')}>Nama</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort('npm')}>NPM</th>
+              <th className="py-2 cursor-pointer" onClick={() => handleSort('nama')}>Nama</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort('kelas')}>Kelas</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort('nomorHp')}>Nomor Hp</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort('alamat')}>Alamat</th>
@@ -102,8 +102,8 @@ const DataSiswa = () => {
           <tbody>
             {students.map((student) => (
               <tr key={student.id} className="border-t">
-                <td className="py-2 text-center">{student.nama}</td>
                 <td className="py-2 text-center">{student.npm}</td>
+                <td className="py-2 text-center">{student.nama}</td>
                 <td className="py-2 text-center">{student.kelas}</td>
                 <td className="py-2 text-center">{student.nomorHp}</td>
                 <td className="py-2 text-center">{student.alamat}</td>
