@@ -6,6 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
+import Swal from "sweetalert2";
 
 const LoginSchema = z.object({
   username: z
@@ -58,7 +59,12 @@ const LoginPage = () => {
 
       if (result?.ok) {
         // setAlert({ status: "success", message: "Masuk berhasil" });
-        toast.success("Masuk Berhasil");
+        Swal.fire({
+          title: "Berhasil",
+          text: "Berhasil Login",
+          icon: "success",
+        })
+        // toast.success("Masuk Berhasil");
         setLoginData({ username: "", password: "" });
         setTimeout(() => {
           if (session.user.role === "siswa") {
@@ -71,6 +77,11 @@ const LoginPage = () => {
         }, 10000);
       } else {
         // setAlert({ status: "error", message: "Masuk gagal" });
+        // Swal.fire({
+        //   title: "Gagal",
+        //   text: "Gagal Masuk",
+        //   icon: "error"
+        // })
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -81,7 +92,12 @@ const LoginPage = () => {
         setErrors(fieldErrors);
       } else {
         // setAlert({ status: "error", message: "Something went wrong" });
-        toast.error("Something went wrong");
+        // toast.error("Something went wrong");
+        Swal.fire({
+          title: "Error",
+          text: "Terjadi Kesalahan",
+          icon: "error"
+        })
       }
     }
   };

@@ -6,6 +6,7 @@ import { LayoutAdmin } from "@/components/Sidebar_admin/Layout-Admin";
 import Link from "next/link";
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
+import Swal from 'sweetalert2';
 
 const DataSiswa = () => {
   const [students, setStudents] = useState([]);
@@ -35,9 +36,19 @@ const DataSiswa = () => {
   };
 
   const handleDelete = async (npm) => {
-    const confirmed = confirm('Apakah Anda yakin ingin menghapus data ini?');
-    if (!confirmed) return;
-
+    const result = await Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Anda tidak akan bisa mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+  
+    if (!result.isConfirmed) return;
+  
     try {
       const response = await fetch('/api/siswa', {
         method: 'DELETE',
@@ -46,16 +57,28 @@ const DataSiswa = () => {
         },
         body: JSON.stringify({ npm }),
       });
-
+  
       if (response.ok) {
         setStudents(students.filter(student => student.npm !== npm));
-        toast.success("Berhasil Menghapus Data");
+        Swal.fire({
+          title: "Berhasil",
+          text: "Berhasil Menghapus Data",
+          icon: "success",
+        });
       } else {
         const errorData = await response.json();
-        alert(`Gagal menghapus data: ${errorData.message}`);
+        Swal.fire({
+          title: "Gagal Menghapus Data",
+          text: `Gagal menghapus data: ${errorData.message}`,
+          icon: "error"
+        });
       }
     } catch (error) {
-      alert(`Gagal menghapus data: ${error.message}`);
+      Swal.fire({
+        title: "Gagal",
+        text: `Gagal menghapus data: ${error.message}`,
+        icon: "error"
+      });
     }
   };
 
