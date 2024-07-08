@@ -21,7 +21,7 @@ const SignUpSchema = z.object({
     .string()
     .min(6, { message: "Password minimal 6 karakter!" })
     .max(50, { message: "Password maksimal 50 karakter!" }),
-  role: z.enum(["siswa"]),
+  role: z.enum(["siswa","dosen"]),
   npm: z
     .string()
     .min(5, { message: "NPM minimal 5 karakter!" })
@@ -70,11 +70,11 @@ export default function Daftar() {
         // toast.success("User berhasil dibuat");
         Swal.fire({
           title: "Berhasil",
-          text: "Berhasil Membuat akun, silahkan Login. Jika anda dosen hubungi Admin",
+          text: "Berhasil Membuat akun",
           icon: "success",
         })
         setTimeout(() => {
-          router.push('/login');
+          router.push('/admin/datauser');
         }, 500);
       } else {
         // toast.error(result.message || "Terjadi Kesalahan pada saat membuat user");
@@ -110,7 +110,7 @@ export default function Daftar() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
       <Toaster richColors />
       <Head>
-        <title>Daftar</title>
+        <title>Tambah Data</title>
       </Head>
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center">Daftar</h2>
@@ -208,6 +208,7 @@ export default function Daftar() {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="siswa">Siswa</option>
+              <option value="dosen">Dosen</option>
             </select>
             {errors.role && (
               <p className="text-red-500 text-xs">{errors.role}</p>
@@ -220,6 +221,15 @@ export default function Daftar() {
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Daftar
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => router.back()}
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Kembali
             </button>
           </div>
         </form>
