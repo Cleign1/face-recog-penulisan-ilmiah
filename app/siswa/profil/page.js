@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Layout } from "@/components/Sidebar_siswa/Layout";
 import { useSession } from 'next-auth/react';
+import Swal from 'sweetalert2';
 
 export default function Profil() {
   const [userData, setUserData] = useState({
@@ -52,27 +53,32 @@ export default function Profil() {
     setIsSaving(true);
     try {
       const response = await fetch('/api/data', {
-        method: 'POST',
+        method: userData.npm ? 'PUT' : 'POST', // Gunakan PUT jika data ada, POST jika data baru
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
       });
-
+  
       if (!response.ok) {
-        throw new Error('Failed to update user data');
+        throw new Error('Failed to save user data');
       }
-
-      const result = await response.json();
-      console.log('Data updated successfully:', result);
-      // toast.success('Data berhasil diperbarui');
-    } catch (error) {
-      console.error('Error updating user data:', error);
-      // toast.error('Gagal memperbarui data');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  
+        const result = await response.json();
+        // console.log('Data updated successfully:', result);
+        // toast.success('Data berhasil diperbarui');
+        Swal.fire({
+          title: "Berhasil",
+          text: "Berhasil Memperbaharui data",
+          icon: "success",
+        })
+      } catch (error) {
+        console.error('Error updating user data:', error);
+        // toast.error('Gagal memperbarui data');
+      } finally {
+        setIsSaving(false);
+      }
+    };
 
   if (isLoading) {
     return <div className="items-center text-center p-96 text-2xl">Loading...</div>;
@@ -96,7 +102,7 @@ export default function Profil() {
                 id="npm"
                 name="npm"
                 type="text"
-                value={userData.npm}
+                value={session.user?.npm}
                 readOnly
               />
             </div>
@@ -179,6 +185,9 @@ export default function Profil() {
                 {isSaving ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
+          <div>
+            <h1 className='text-black text-center pt-5'>Jika Data yang muncul hanya NPM, Hubungi Admin</h1>
+          </div>
           </form>
         </div>
       </Layout>
