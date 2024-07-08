@@ -13,7 +13,7 @@ const DataKelasDosen = () => {
   const [selectedClass, setSelectedClass] = useState('3IA15');
   const classes = ['3IA15']; // Contoh kelas lain
 
-  const fetchData = async (kelas) => {
+  const fetchData = async () => {
     try {
       const response = await fetch(`/api/data/kelas?kelas=${classes}`);
       if (!response.ok) {
