@@ -172,6 +172,9 @@ export default function ProfilDosen() {
                 {isSaving ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
+            <div>
+              <h1 className='text-black pt-5 text-center'>Jika hanya nidn yang muncul, hubungi admin.</h1>
+            </div>
           </form>
         </div>
       </LayoutDosen>
