@@ -40,7 +40,7 @@ export async function GET(request) {
   }
 }
 
-export async function POST(request) {
+export async function PUT(request) {
   try {
     const body = await request.json();
     const { npm, nama, kelas, nomorHp, alamat } = body;
@@ -91,6 +91,47 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('Error updating user data:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    const { npm, nama, kelas, nomorHp, alamat } = body;
+
+    if (!npm) {
+      return NextResponse.json({ error: 'NPM is required' }, { status: 400 });
+    }
+
+    const userExists = await db.user.findUnique({
+      where: { npm },
+      include: {
+        dataSiswa: true,
+        dataDosen: true,
+      },
+    });
+
+    if (userExists) {
+      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    }
+
+    const newUser = await db.dataSiswa.create({
+      data: {
+        npm,
+        nama,
+        kelas,
+        nomorHp,
+        alamat,
+      },
+    });
+
+    return NextResponse.json({
+      message: 'User data added successfully',
+      user: newUser,
+    });
+  } catch (error) {
+    console.error('Error adding user data:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
