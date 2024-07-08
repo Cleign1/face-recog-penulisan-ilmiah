@@ -22,6 +22,7 @@
 
 ## Polishing
 - [ ] apply sweetalert2 and sonner to project
+- [ ] comment code for better readability
 
 ## Debugging
 - fix this warning
