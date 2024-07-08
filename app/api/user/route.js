@@ -7,7 +7,8 @@ const userSchema = z.object({
     username: z
         .string()
         .min(3, { message: "Username minimal 3 karakter!" })
-        .max(25, { message: "Username maksimal 25 karakter!" }),
+        .max(25, { message: "Username maksimal 25 karakter!" })
+        .regex(/^\S+$/, { message: "Username tidak boleh mengandung spasi!" }), 
     email: z
         .string()
         .min(3, { message: "Email minimal 3 karakter!" })
@@ -105,5 +106,64 @@ export async function POST(req) {
             user: null,
             message: 'Terjadi Kesalahan pada saat membuat user'
         }, { status: 500 });
+    }
+}
+
+export async function GET(req) {
+    try {
+        const users = await db.User.findMany({
+            where: {
+                role: {
+                    in: ['siswa', 'dosen'],
+                },
+            },
+            include: {
+                dataSiswa: true,
+                dataDosen: true,
+            },
+        });
+
+        const response = users.map(user => {
+            const userData = user.dataSiswa || user.dataDosen;
+            return {
+                npm: user.npm,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                nama: userData ? userData.nama : null,
+                kelas: userData ? userData.kelas : null,
+                nomorHp: userData ? userData.nomorHp : null,
+                alamat: userData ? userData.alamat : null,
+                createdAt: user.createdAt,
+            };
+        });
+
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const { npm } = await req.json();
+
+        const user = await db.User.findUnique({
+            where: { npm },
+        });
+
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        await db.User.delete({
+            where: { npm },
+        });
+
+        return NextResponse.json({ message: 'User deleted successfully' }, { status: 200 });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
