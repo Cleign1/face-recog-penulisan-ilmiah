@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
@@ -14,32 +13,37 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  email      String   @unique
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String     @unique
+  npm        String     @unique
   password   String
   role       String
-  createdAt  DateTime @map("created_at")
+  createdAt  DateTime   @map("created_at")
+  dataSiswa  DataSiswa?
+  dataDosen  DataDosen?
 }
 
 model DataSiswa {
-  id       Int      @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   nama     String
-  npm      String   @unique
+  npm      String    @unique
   kelas    String
-  nomorHp  String   @map("nomor_hp")
+  nomorHp  String    @map("nomor_hp")
   alamat   String
-  presensi Presensi[]
+  presensi Presensi?
+  user     User      @relation(fields: [npm], references: [npm])
 }
 
 model DataDosen {
-  id      Int      @id @default(autoincrement())
-  nama    String   
-  nidn    String   @unique
+  id      Int          @id @default(autoincrement())
+  nama    String  
+  nidn    String       @unique
   kelas   String
-  nomorHp String   @map("nomor_hp")
+  nomorHp String       @map("nomor_hp")
   alamat  String
   matkul  MataKuliah[]
+  user    User         @relation(fields: [nidn], references: [npm])
 }
 
 model MataKuliah {
@@ -51,13 +55,11 @@ model MataKuliah {
 }
 
 model Presensi {
-  id         Int      @id @default(autoincrement())
-  tanggal    DateTime @default(now()) @db.Timestamptz(6)
+  id         Int       @id @default(autoincrement())
+  tanggal    DateTime  @default(now()) @db.Timestamptz(6)
   nama       String
-  npm        String   @unique
-  sudahAbsen Boolean  @map("sudah_absen")
-  waktuAbsen DateTime @map("waktu_absen")
+  npm        String    @unique
+  sudahAbsen Boolean   @map("sudah_absen")
+  waktuAbsen DateTime  @map("waktu_absen")
   siswa      DataSiswa @relation(fields: [npm], references: [npm])
 }
-
-
