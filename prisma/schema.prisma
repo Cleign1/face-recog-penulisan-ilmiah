@@ -59,7 +59,7 @@ model Presensi {
   tanggal    DateTime  @default(now()) @db.Timestamptz(6)
   nama       String
   npm        String    @unique
-  sudahAbsen Boolean   @map("sudah_absen")
   waktuAbsen DateTime  @map("waktu_absen")
+  status     String
   siswa      DataSiswa @relation(fields: [npm], references: [npm])
 }
