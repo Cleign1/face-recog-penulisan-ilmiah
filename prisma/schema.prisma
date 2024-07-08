@@ -42,16 +42,7 @@ model DataDosen {
   kelas   String
   nomorHp String       @map("nomor_hp")
   alamat  String
-  matkul  MataKuliah[]
   user    User         @relation(fields: [nidn], references: [npm])
-}
-
-model MataKuliah {
-  id             Int        @id @default(autoincrement())
-  dosen          String     @unique
-  kodeMataKuliah String     @unique @map("kode_mata_kuliah")
-  namaMataKuliah String     @map("nama_mata_kuliah")
-  dosenNama      DataDosen  @relation(fields: [dosen], references: [nidn])
 }
 
 model Presensi {
