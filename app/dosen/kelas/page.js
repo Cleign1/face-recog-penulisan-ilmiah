@@ -10,18 +10,18 @@ const DataKelasDosen = () => {
   const [students, setStudents] = useState([]);
   const [sortField, setSortField] = useState('npm');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedClass, setSelectedClass] = useState('3IA15');
+  const [selectedClass, setSelectedClass] = useState('3IA15'); // Default ke 3IA16
   const classes = ['3IA15']; // Contoh kelas lain
 
-  const fetchData = async () => {
+  const fetchData = async (kelas) => {
     try {
-      const response = await fetch(`/api/data/kelas?kelas=${classes}`);
+      const response = await fetch(`/api/data/kelas?kelas=${kelas}`);
       if (!response.ok) {
         throw new Error('Failed to fetch students');
       }
       const data = await response.json();
       setStudents(data);
-      toast.success("Berhasil untuk Refresh");
+      toast.success("Data presensi berhasil dimuat!");
     } catch (error) {
       toast.error(`Error: ${error.message}`);
     }
@@ -41,7 +41,6 @@ const DataKelasDosen = () => {
       return 0;
     }));
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center text-black pt-24">
@@ -74,9 +73,9 @@ const DataKelasDosen = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map((student, index) => (
+            {students.map((student) => (
               <tr key={student.npm} className="border-t">
-                <td className="py-2 text-center">{index + 1}</td>
+                <td className="py-2 text-center">{student.npm}</td>
                 <td className="py-2 text-center">{student.nama}</td>
                 <td className="py-2 text-center">{student.kelas}</td>
                 <td className="py-2 text-center">{student.nomorHp}</td>
