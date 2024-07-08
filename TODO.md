@@ -9,9 +9,9 @@
 - [x] Create backend api for crud data siswa
 - [x] create backend api for crud data dosen
 - [ ] create backend api for data presensi in sync with face-api face-recognition
-- [ ] create api for linking user database and datasiswa database, 
+- [x] create api for linking user database and datasiswa database, 
       if npm match show the data diri siswa, if not you can create from scratch and it updated the database
-- [ ] create api for linking user database and datadosen database, 
+- [x] create api for linking user database and datadosen database, 
       if nidn match show the data diri dosen, if not you can create from scratch and it updated the database
 - [ ] show data kelas table from datasiswa database using api
 
