@@ -64,29 +64,6 @@ export default function DashboardDosen() {
               <div className="text-2xl mt-2">25</div>
             </div>
           </div>
-
-          <table className="w-full bg-white rounded shadow">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="py-2 px-4">Tanggal</th>
-                <th className="py-2 px-4">Nama</th>
-                <th className="py-2 px-4">NPM</th>
-                <th className="py-2 px-4">Kelas</th>
-                <th className="py-2 px-4">Waktu Presensi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2 px-4">{student.date}</td>
-                  <td className="py-2 px-4">{student.name}</td>
-                  <td className="py-2 px-4">{student.npm}</td>
-                  <td className="py-2 px-4">{student.class}</td>
-                  <td className="py-2 px-4">{student.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </LayoutDosen>
     </div>
