@@ -14,7 +14,7 @@
 - [x] create api for linking user database and datadosen database, 
       if nidn match show the data diri dosen, if not you can create from scratch and it updated the database
 - [x] show data kelas table from datasiswa database using api
-- [ ] create data presensi api for manual presensi dosen
+- [x] create data presensi api for manual presensi dosen
 - [ ] create data presensi api for manual presensi admin
 - [ ] update siswa dashboard
 - [ ] update dosen dashboard
