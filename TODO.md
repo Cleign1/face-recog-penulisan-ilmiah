@@ -16,7 +16,7 @@
 - [x] show data kelas table from datasiswa database using api
 - [x] create data presensi api for manual presensi dosen
 - [x] create data presensi api for manual presensi admin
-- [ ] update siswa dashboard
+- [x] update siswa dashboard
 - [ ] update dosen dashboard
 - [ ] update admin dashboard
 
