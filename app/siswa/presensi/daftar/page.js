@@ -1,7 +1,13 @@
-import React from 'react'
+import dynamic from 'next/dynamic';
 
-export default function DaftarAbsen() {
+const FaceRecognition = dynamic(() => import('@/components/FaceRecognition'), {
+  ssr: false,
+});
+
+export default function DaftarPresensi() {
   return (
-    <div>DaftarAbsen</div>
-  )
+    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 flex flex-col items-center justify-center p-6">
+      <FaceRecognition />
+    </div>
+  );
 }
