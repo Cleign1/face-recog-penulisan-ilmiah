@@ -173,7 +173,7 @@ export default function ProfilDosen() {
               </button>
             </div>
             <div>
-              <h1 className='text-black pt-5 text-center'>Jika hanya nidn yang muncul, hubungi admin.</h1>
+              <h1 className='text-black pt-5 text-center'>Jika hanya NIDN yang muncul, hubungi admin.</h1>
             </div>
           </form>
         </div>
