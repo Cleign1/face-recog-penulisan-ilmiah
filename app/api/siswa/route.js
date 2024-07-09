@@ -28,7 +28,7 @@ export async function POST(request) {
     if (error.code === 'P2002') {
       return NextResponse.json({ message: 'NPM sudah terdaftar.' }, { status: 409 });
     }
-    return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Server error, tambahkan data user terlebih dahulu' }, { status: 500 });
   }
 }
 
