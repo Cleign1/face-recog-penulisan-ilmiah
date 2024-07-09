@@ -68,7 +68,7 @@ const DataUser = () => {
         const errorData = await response.json();
         Swal.fire({
           title: "Gagal Menghapus Data",
-          text: `Gagal menghapus data: ${errorData.message}`,
+          text: `Gagal menghapus data, Hapus datasiswa/datadosen terlebih dahulu.`,
           icon: "error"
         });
       }
