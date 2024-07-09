@@ -17,7 +17,7 @@
 - [x] create data presensi api for manual presensi dosen
 - [x] create data presensi api for manual presensi admin
 - [x] update siswa dashboard
-- [ ] update dosen dashboard
+- [x] update dosen dashboard
 - [ ] update admin dashboard
 
 ## Polishing
