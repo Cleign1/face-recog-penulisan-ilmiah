@@ -92,6 +92,7 @@ export default function Dashboard() {
                 <th className="py-2 px-4 cursor-pointer">Nama</th>
                 <th className="py-2 px-4 cursor-pointer">NPM</th>
                 <th className="py-2 px-4 cursor-pointer">Waktu Presensi</th>
+                <th className="py-2 px-4 cursor-pointer">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -102,6 +103,7 @@ export default function Dashboard() {
                     <td className="py-2 px-4 text-center">{entry.nama}</td>
                     <td className="py-2 px-4 text-center">{entry.npm}</td>
                     <td className="py-2 px-4 text-center">{formatTime(entry.waktuAbsen)}</td>
+                    <td className="py-2 px-4 text-center">{entry.status}</td>
                   </tr>
                 ))}
             </tbody>
