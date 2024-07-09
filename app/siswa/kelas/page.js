@@ -78,7 +78,7 @@ const DataSiswa = () => {
           <tbody>
             {students.map((student, index) => (
               <tr key={student.npm} className="border-t">
-                <td className="py-2 text-center">{index + 1}</td>
+                <td className="py-2 text-center">{student.npm}</td>
                 <td className="py-2 text-center">{student.nama}</td>
                 <td className="py-2 text-center">{student.kelas}</td>
                 <td className="py-2 text-center">{student.nomorHp}</td>
