@@ -60,7 +60,7 @@ export default function TambahPresensiManual() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add presensi');
+        throw new Error(errorData.message || 'Gagal menambahkan presensi');
       }
 
       const result = await response.json();
@@ -127,6 +127,7 @@ export default function TambahPresensiManual() {
                 Simpan
               </button>
             </div>
+            <h1 className="text-black pt-5">Data Siswa harus ada pada database terlebih dahulu, baru bisa menambahkan presensi</h1>
           </form>
         </div>
       </LayoutDosen>
