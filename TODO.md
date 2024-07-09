@@ -18,7 +18,7 @@
 - [x] create data presensi api for manual presensi admin
 - [x] update siswa dashboard
 - [x] update dosen dashboard
-- [ ] update admin dashboard
+- [x] update admin dashboard
 
 ## Polishing
 - [ ] apply sweetalert2 and sonner to project
