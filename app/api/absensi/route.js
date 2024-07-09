@@ -51,7 +51,7 @@ export async function POST(req) {
         }
         return NextResponse.json({
             presensi: null,
-            message: 'Terjadi kesalahan saat membuat data absensi'
+            message: 'Terjadi kesalahan saat membuat data absensi, cek apakah Datasiswa sudah ada'
         }, { status: 500 });
     }
 }
