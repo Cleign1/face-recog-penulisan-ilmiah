@@ -2,13 +2,32 @@
 
 import { useState } from "react";
 import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
+import { toast } from 'sonner';
+import { Toaster } from 'sonner';
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+
+// Schema validasi untuk data absensi
+const absensiSchema = z.object({
+    nama: z
+        .string()
+        .min(3, { message: "Nama minimal 3 karakter!" })
+        .max(50, { message: "Nama maksimal 50 karakter!" }),
+    npm: z
+        .string()
+        .min(5, { message: "NPM minimal 5 karakter!" })
+        .max(8, { message: "NPM maksimal 8 karakter!" })
+        .regex(/^\d+$/, { message: "NPM harus berupa angka!" }), 
+    status: z
+        .enum(['Izin', 'Alfa', 'Sakit']),
+});
 
 export default function TambahPresensiManual() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
-    class: "",
+    nama: "",
     npm: "",
-    status: "Masuk", // default value
+    status: "Izin", // Default value
   });
 
   const handleChange = (e) => {
@@ -19,14 +38,48 @@ export default function TambahPresensiManual() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // Handle form submission logic here
+
+    const data = {
+      ...formData,
+      waktuAbsen: new Date().toISOString(),
+    };
+
+    try {
+      // Validasi menggunakan zod
+      absensiSchema.parse(data);
+
+      const response = await fetch(`/api/absensi`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal menambahkan presensi');
+      }
+
+      const result = await response.json();
+      toast.success(result.message);
+      router.push("/dosen/datapresensi");
+      
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(`Validation Error: ${error.errors.map(err => err.message).join(', ')}`);
+      } else {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
   };
 
   return (
     <div>
       <LayoutDosen>
+        <Toaster richColors />
         <div className="p-6 flex justify-center items-center text-black pt-32">
           <form onSubmit={handleSubmit} className="bg-gray-100 p-8 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-6 text-center">Tambah Presensi Manual</h1>
@@ -34,20 +87,11 @@ export default function TambahPresensiManual() {
               <label className="block text-gray-700">Nama</label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="nama"
+                value={formData.nama}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Kelas</label>
-              <input
-                type="text"
-                name="class"
-                value={formData.class}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded"
+                required
               />
             </div>
             <div className="mb-4">
@@ -58,6 +102,7 @@ export default function TambahPresensiManual() {
                 value={formData.npm}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
+                required
               />
             </div>
             <div className="mb-4">
@@ -67,9 +112,10 @@ export default function TambahPresensiManual() {
                 value={formData.status}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
+                required
               >
-                <option value="Masuk">Masuk</option>
-                <option value="Absen">Absen</option>
+                <option value="Izin">Izin</option>
+                <option value="Alfa">Alfa</option>
                 <option value="Sakit">Sakit</option>
               </select>
             </div>
@@ -81,6 +127,7 @@ export default function TambahPresensiManual() {
                 Simpan
               </button>
             </div>
+            <h1 className="text-black pt-5">Data Siswa harus ada pada database terlebih dahulu, baru bisa menambahkan presensi</h1>
           </form>
         </div>
       </LayoutDosen>

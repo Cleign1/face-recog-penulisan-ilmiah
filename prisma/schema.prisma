@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
@@ -14,48 +13,55 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  email      String   @unique
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String     @unique
+  npm        String     @unique
   password   String
   role       String
-  createdAt  DateTime @map("created_at")
+  createdAt  DateTime   @map("created_at")
+  dataSiswa  DataSiswa?
+  dataDosen  DataDosen?
 }
 
 model DataSiswa {
-  id       Int      @id @default(autoincrement())
-  nama     String
-  npm      String   @unique
-  kelas    String
-  nomorHp  String   @map("nomor_hp")
-  alamat   String
-  presensi Presensi[]
+  id          Int       @id @default(autoincrement())
+  nama        String
+  npm         String    @unique
+  kelas       String
+  nomorHp     String    @map("nomor_hp")
+  alamat      String
+  presensi    Presensi?
+  faceData    FaceData?
+  user        User      @relation(fields: [npm], references: [npm])
 }
 
 model DataDosen {
-  id      Int      @id @default(autoincrement())
-  nama    String   @unique
-  nidn    String   @unique
-  nomorHp String   @map("nomor_hp")
-  matkul  MataKuliah[]
-}
-
-model MataKuliah {
-  id             Int        @id @default(autoincrement())
-  dosen          String     @unique
-  kodeMataKuliah String     @unique @map("kode_mata_kuliah")
-  namaMataKuliah String     @map("nama_mata_kuliah")
-  dosenNama      DataDosen  @relation(fields: [dosen], references: [nama])
+  id      Int          @id @default(autoincrement())
+  nama    String  
+  nidn    String       @unique
+  kelas   String
+  nomorHp String       @map("nomor_hp")
+  alamat  String
+  user    User         @relation(fields: [nidn], references: [npm])
 }
 
 model Presensi {
-  id         Int      @id @default(autoincrement())
-  tanggal    DateTime @default(now()) @db.Timestamptz(6)
+  id         Int       @id @default(autoincrement())
+  tanggal    DateTime  @default(now()) @db.Timestamptz(6)
   nama       String
-  npm        String   @unique
-  sudahAbsen Boolean  @map("sudah_absen")
-  waktuAbsen DateTime @map("waktu_absen")
+  npm        String    @unique
+  waktuAbsen DateTime  @map("waktu_absen")
+  status     String
   siswa      DataSiswa @relation(fields: [npm], references: [npm])
 }
 
-
+model FaceData {
+  id             Int      @id @default(autoincrement())
+  name           String
+  npm            String   @unique
+  faceDescriptor Json
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  dataSiswa      DataSiswa @relation(fields: [npm], references: [npm])
+}

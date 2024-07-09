@@ -1,63 +1,181 @@
-import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
+"use client";
 
-export default function DataPresensi() {
+import { useState, useEffect } from 'react';
+import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
+import { useSession } from 'next-auth/react';
+
+export default function ProfilDosen() {
+  const [userData, setUserData] = useState({
+    nidn: '',
+    nama: '',
+    alamat: '',
+    nomorHp: ''
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (session?.user?.npm) {
+        try {
+          setIsLoading(true);
+          const response = await fetch(`/api/data?npm=${session.user.npm}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+          const data = await response.json();
+          setUserData(data);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          // toast.error('Gagal mengambil data pengguna');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user data');
+      }
+
+      const result = await response.json();
+      console.log('Data updated successfully:', result);
+      // toast.success('Data berhasil diperbarui');
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      // toast.error('Gagal memperbarui data');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="items-center text-center p-96 text-2xl">Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 flex">
       <LayoutDosen>
-        <div className="p-6">
-          <h1 className="text-black mb-4 text-3xl text-center pt-28 p-5">Profil</h1>
-          <div className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center w-full p-6">
+          <h1 className="text-4xl font-bold mb-8 text-black">Profil {userData.nama}</h1>
+          <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded shadow">
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="name"
+                htmlFor="nidn"
               >
-                Nama
+                NIDN
               </label>
               <input
-                id="name"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                id="nidn"
+                name="nidn"
                 type="text"
-                placeholder="Nama"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={userData.npm}
+                readOnly
               />
             </div>
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="address"
+                htmlFor="nama"
+              >
+                Nama
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="nama"
+                name="nama"
+                type="text"
+                value={userData.nama}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="kelas"
+              >
+                Kelas
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="kelas"
+                name="kelas"
+                type="text"
+                value={userData.kelas}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="alamat"
               >
                 Alamat
               </label>
               <input
-                id="address"
-                type="text"
-                placeholder="Alamat"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="alamat"
+                name="alamat"
+                type="text"
+                value={userData.alamat}
+                onChange={handleInputChange}
               />
             </div>
             <div className="mb-6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="phone"
+                htmlFor="nomorHp"
               >
                 Nomor HP
               </label>
               <input
-                id="phone"
-                type="text"
-                placeholder="Nomor HP"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="nomorHp"
+                name="nomorHp"
+                type="text"
+                value={userData.nomorHp}
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex items-center justify-between">
               <button
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+                disabled={isSaving}
               >
-                Simpan
+                {isSaving ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
-          </div>
+            <div>
+              <h1 className='text-black pt-5 text-center'>Jika hanya NIDN yang muncul, hubungi admin.</h1>
+            </div>
+          </form>
         </div>
       </LayoutDosen>
     </div>

@@ -34,10 +34,13 @@ export async function middleware(req) {
   if (pathname.startsWith("/admin") && token.role !== "admin") {
     return NextResponse.redirect(new URL("/", req.url));
   }
+  if (pathname.startsWith("/daftar") && token.role !== "admin") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/siswa/:path*", "/dosen/:path*", "/admin/:path*", "/login", "/"],
+  matcher: ["/siswa/:path*", "/dosen/:path*", "/admin/:path*", "/login", "/","/daftar"],
 };

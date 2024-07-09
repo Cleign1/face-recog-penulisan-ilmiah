@@ -1,25 +1,46 @@
 "use client";
-
 import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-
-const students = [
-  { date: '2023-06-20', name: 'Aldo Rizky Ramadhan', npm: 50421106, class: '3IA15', time: '08:00' },
-  { date: '2023-06-20', name: 'Aura Khalisa Dini Lestari', npm: 50421238, class: '3IA15', time: '08:05' },
-  { date: '2023-06-20', name: 'Dani Irsyad Maulana', npm: 50421327, class: '3IA15', time: '08:10' },
-  // Add more student data as needed
-];
+import { useState, useEffect } from "react";
 
 export default function DashboardDosen() {
   const { data: session, status } = useSession();
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (session?.user?.npm) {
+      fetchDashboardData(session.user.npm);
+    }
+  }, [session]);
+
+  const fetchDashboardData = async (nidn) => {
+    try {
+      const response = await fetch(`api/dosen/dashboard?nidn=${nidn}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch dashboard data');
+      }
+      const data = await response.json();
+      setDashboardData(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (status === "loading" || loading) {
     return <div className="items-center text-center p-96 text-2xl">Loading...</div>;
   }
 
   if (status === "unauthenticated") {
     return <div className="items-center text-center p-96 text-2xl">Not authenticated</div>;
+  }
+
+  if (error) {
+    return <div className="items-center text-center p-96 text-2xl">Error: {error}</div>;
   }
 
   return (
@@ -28,7 +49,7 @@ export default function DashboardDosen() {
         <Head>
           <title>Dosen Dashboard</title>
         </Head>
-        <div className=" p-6 text-black">
+        <div className="p-6 text-black">
           <h1 className="text-2xl font-bold mb-8">
             Selamat Datang, Dosen {session.user?.username}!
           </h1>
@@ -36,57 +57,25 @@ export default function DashboardDosen() {
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">📅</div>
               <div className="text-xl font-semibold">Tanggal</div>
-              <div className="text-2xl mt-2">20 Juni 2023</div>
+              <div className="text-2xl mt-2">{dashboardData?.tanggal || 'N/A'}</div>
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">🎓</div>
               <div className="text-xl font-semibold">Kelas</div>
-              <div className="text-2xl mt-2">3IA15</div>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">📚</div>
-              <div className="text-xl font-semibold">Mata Kuliah</div>
-              <div className="text-2xl mt-2">Pemrograman Web</div>
+              <div className="text-2xl mt-2">{dashboardData?.kelas || 'N/A'}</div>
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">👥</div>
               <div className="text-xl font-semibold">Total Siswa</div>
-              <div className="text-2xl mt-2">30</div>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">👥</div>
-              <div className="text-xl font-semibold">Total Siswa Aktif</div>
-              <div className="text-2xl mt-2">28</div>
+              <div className="text-2xl mt-2">{dashboardData?.totalSiswa || 0}</div>
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
               <div className="text-4xl mb-2">✔️</div>
               <div className="text-xl font-semibold">Total Presensi</div>
-              <div className="text-2xl mt-2">25</div>
+              <div className="text-2xl mt-2">{dashboardData?.totalPresensi || 0}</div>
             </div>
           </div>
-
-          <table className="w-full bg-white rounded shadow">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="py-2 px-4">Tanggal</th>
-                <th className="py-2 px-4">Nama</th>
-                <th className="py-2 px-4">NPM</th>
-                <th className="py-2 px-4">Kelas</th>
-                <th className="py-2 px-4">Waktu Presensi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2 px-4">{student.date}</td>
-                  <td className="py-2 px-4">{student.name}</td>
-                  <td className="py-2 px-4">{student.npm}</td>
-                  <td className="py-2 px-4">{student.class}</td>
-                  <td className="py-2 px-4">{student.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* You can add a table or list here to display the presensi data if needed */}
         </div>
       </LayoutDosen>
     </div>
