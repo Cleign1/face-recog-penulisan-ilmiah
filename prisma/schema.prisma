@@ -25,14 +25,15 @@ model User {
 }
 
 model DataSiswa {
-  id       Int       @id @default(autoincrement())
-  nama     String
-  npm      String    @unique
-  kelas    String
-  nomorHp  String    @map("nomor_hp")
-  alamat   String
-  presensi Presensi?
-  user     User      @relation(fields: [npm], references: [npm])
+  id          Int       @id @default(autoincrement())
+  nama        String
+  npm         String    @unique
+  kelas       String
+  nomorHp     String    @map("nomor_hp")
+  alamat      String
+  presensi    Presensi?
+  faceData    FaceData?
+  user        User      @relation(fields: [npm], references: [npm])
 }
 
 model DataDosen {
@@ -53,4 +54,14 @@ model Presensi {
   waktuAbsen DateTime  @map("waktu_absen")
   status     String
   siswa      DataSiswa @relation(fields: [npm], references: [npm])
+}
+
+model FaceData {
+  id             Int      @id @default(autoincrement())
+  name           String
+  npm            String   @unique
+  faceDescriptor Json
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  dataSiswa      DataSiswa @relation(fields: [npm], references: [npm])
 }
