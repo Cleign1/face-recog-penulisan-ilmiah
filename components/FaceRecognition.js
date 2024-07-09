@@ -143,7 +143,7 @@ export default function FaceRecognition() {
 
   return (
     <div className="w-full max-w-3xl bg-white p-8 rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Face Registration</h1>
+      <h1 className="text-2xl font-bold mb-4">Pendaftaran Wajah</h1>
       <div className="relative border border-gray-300 w-full h-96 flex items-center justify-center mb-4">
         <video
           ref={videoRef}
@@ -157,14 +157,14 @@ export default function FaceRecognition() {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Enter name"
+          placeholder="Masukkan nama"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-3 py-2 border rounded"
         />
         <input
           type="text"
-          placeholder="Enter NPM"
+          placeholder="Masukkan NPM"
           value={npm}
           onChange={(e) => setNPM(e.target.value)}
           className="w-full px-3 py-2 border rounded"
@@ -175,19 +175,19 @@ export default function FaceRecognition() {
           onClick={toggleCamera}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          {isCameraOn ? "Turn Off Camera" : "Turn On Camera"}
+          {isCameraOn ? "Matikan Kamera" : "Hidupkan Kamera"}
         </button>
         <button
           onClick={saveToJSON}
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
           disabled={!faceDescriptor}
         >
-          Save to JSON
+          Simpan
         </button>
       </div>
       {faceDescriptor && (
         <p className="text-green-600">
-          Face detected! Click Save to JSON to register.
+          Wajah Terdeteksi! Klik simpan untuk menyimpan Wajah.
         </p>
       )}
     </div>
