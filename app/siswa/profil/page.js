@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Layout } from "@/components/Sidebar_siswa/Layout";
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 export default function Profil() {
   const [userData, setUserData] = useState({
@@ -16,6 +17,7 @@ export default function Profil() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -172,6 +174,7 @@ export default function Profil() {
             </div>
             <div className="flex items-center justify-between">
               <button
+                onClick={() => router.push("/siswa/presensi/daftar")}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
               >
