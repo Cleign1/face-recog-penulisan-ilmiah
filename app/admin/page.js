@@ -25,30 +25,27 @@ export default function DashboardAdmin() {
     <div>
       <LayoutAdmin>
         <div className="p-6 text-black">
-          <h1 className="text-2xl font-bold mb-8 ">
+          <h1 className="text-2xl font-bold mb-8">
             Selamat Datang, di panel {session.user?.username}!
           </h1>
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">🎓</div>
-              <div className="text-xl font-semibold">Kelas</div>
-              <div className="text-2xl mt-2">1</div>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">👥</div>
-              <div className="text-xl font-semibold">Total Siswa</div>
-              <div className="text-2xl mt-2">32</div>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">👥</div>
-              <div className="text-xl font-semibold">Total Dosen</div>
-              <div className="text-2xl mt-2">32</div>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">👥</div>
-              <div className="text-xl font-semibold">Total Wajah</div>
-              <div className="text-2xl mt-2">25</div>
-            </div>
+          <div className="bg-white text-black rounded-lg text-center p-8 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              Halaman ini adalah Landing Page Dashboard Admin
+            </h2>
+            <p className="text-lg mb-4">
+              Dashboard ini dibuat sebagai pusat kontrol utama untuk
+              administrator sistem.
+            </p>
+            <p className="text-md mb-4">
+              Dari sini, Anda dapat mengakses berbagai fitur administratif dan
+              memantau aktivitas sistem.
+            </p>
+            <ul className="text-left list-disc list-inside mb-4">
+              <li>Kelola Data Pengguna/User</li>
+              <li>Kelola Data Siswa</li>
+              <li>Kelola Data Dosen</li>
+              <li>Kelola Data Presensi Siswa</li>
+            </ul>
           </div>
         </div>
       </LayoutAdmin>
