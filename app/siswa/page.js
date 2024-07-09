@@ -85,24 +85,25 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <table className="w-full bg-white rounded shadow">
+          <table className="min-w-full bg-white rounded shadow">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="py-2 px-4">Tanggal</th>
-                <th className="py-2 px-4">Nama</th>
-                <th className="py-2 px-4">NPM</th>
-                <th className="py-2 px-4">Waktu Presensi</th>
+              <tr>
+                <th className="py-2 px-4 cursor-pointer" >Tanggal</th>
+                <th className="py-2 px-4 cursor-pointer">Nama</th>
+                <th className="py-2 px-4 cursor-pointer">NPM</th>
+                <th className="py-2 px-4 cursor-pointer">Waktu Presensi</th>
               </tr>
             </thead>
             <tbody>
-              {data.presensi && data.presensi.map((entry, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2 px-4">{formatDate(entry.tanggal)}</td>
-                  <td className="py-2 px-4">{entry.nama}</td>
-                  <td className="py-2 px-4">{entry.npm}</td>
-                  <td className="py-2 px-4">{formatTime(entry.waktuAbsen)}</td>
-                </tr>
-              ))}
+              {data.presensi &&
+                data.presensi.map((entry, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-2 px-4 text-center">{formatDate(entry.tanggal)}</td>
+                    <td className="py-2 px-4 text-center">{entry.nama}</td>
+                    <td className="py-2 px-4 text-center">{entry.npm}</td>
+                    <td className="py-2 px-4 text-center">{formatTime(entry.waktuAbsen)}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
