@@ -45,10 +45,9 @@ Import trace for requested module:
 - Ketua kelas bisa sebagai admin
 - 
 ## Fix
-- [ ] ubah siswa menjadi mahasiswa
+- [x] ubah siswa menjadi mahasiswa
 - [x] capture face sekalian pas register face
 - [x] capture face sekalian pas presensi
-- [ ] tambahkan bukti wajah pada saat daftar
-- [ ] tambahkan bukti wajah pada saat daftar
-- [ ] tampilin bukti wajah daftar di admin dan dosen
-- [ ] tampilin bukti wajah presensi di admin dan dosen
+- [x] tambahkan bukti wajah pada saat daftar
+- [x] tampilin bukti wajah daftar di admin
+- [x] tampilin bukti wajah presensi di admin dan dosen
