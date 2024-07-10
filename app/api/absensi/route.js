@@ -1,12 +1,23 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Storage } from '@google-cloud/storage';
+
+const storage = new Storage({
+    projectId: process.env.PROJECT_ID,
+    credentials: {
+      client_email: process.env.CLIENT_EMAIL,
+      private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n"),
+    }
+});
+
+const bucketName = process.env.BUCKET_NAME;
 
 // API untuk membuat data absensi (POST)
 export async function POST(req) {
     try {
         const body = await req.json();
-        const { nama, npm, status, waktuAbsen } = body;
+        const { nama, npm, status, waktuAbsen, imageData } = body;
 
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Set ke awal hari
@@ -28,6 +39,8 @@ export async function POST(req) {
             }, { status: 409 });
         }
 
+        let imageUrl = null;
+
         // Buat data absensi baru
         const newAbsensi = await db.presensi.create({
             data: {
@@ -35,11 +48,12 @@ export async function POST(req) {
                 npm,
                 status,
                 waktuAbsen: waktuAbsen ? new Date(waktuAbsen) : null,
-                tanggal: new Date()
+                tanggal: new Date(),
+                imageUrl
             }
         });
 
-        return NextResponse.json({ presensi: newAbsensi, message: "Data absensi berhasil dibuat!" }, { status: 200 });
+        return NextResponse.json({ presensi: newAbsensi, message: "Data absensi berhasil dibuat!" }, { status: 201 });
     } catch (error) {
         console.error("Error creating presensi:", error);
         if (error instanceof z.ZodError) {
@@ -60,7 +74,6 @@ export async function POST(req) {
 export async function GET(req) {
     try {
         const absensi = await db.presensi.findMany();
-
         return NextResponse.json(absensi, { status: 200 });
     } catch (error) {
         console.error("Error fetching presensi:", error);
@@ -75,17 +88,34 @@ export async function DELETE(req) {
 
         const absensi = await db.presensi.findUnique({
             where: { npm },
+            select: { imageUrl: true }
         });
 
         if (!absensi) {
             return NextResponse.json({ error: 'Data absensi tidak ditemukan' }, { status: 404 });
         }
 
+        // Delete the image from Google Cloud Storage
+        if (absensi.imageUrl) {
+            const fileName = absensi.imageUrl.split('/').pop();
+            const bucket = storage.bucket(bucketName);
+            const file = bucket.file(`absensi_proof/${fileName}`);
+
+            try {
+                await file.delete();
+                console.log(`File ${fileName} deleted successfully from Google Cloud Storage.`);
+            } catch (deleteError) {
+                console.error('Error deleting file from Google Cloud Storage:', deleteError);
+                // Continue with database deletion even if image deletion fails
+            }
+        }
+
+        // Delete the record from the database
         await db.presensi.delete({
             where: { npm },
         });
 
-        return NextResponse.json({ message: 'Data absensi berhasil dihapus' }, { status: 200 });
+        return NextResponse.json({ message: 'Data absensi dan gambar berhasil dihapus' }, { status: 200 });
     } catch (error) {
         console.error('Error deleting presensi:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
