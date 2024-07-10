@@ -11,6 +11,9 @@ const DataPresensi = () => {
   const [presensi, setPresensi] = useState([]);
   const [sortField, setSortField] = useState("npm");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [showModal, setShowModal] = useState(false);
+  const [currentImage, setCurrentImage] = useState("");
+  const [currentStatus, setCurrentStatus] = useState("");
 
   const fetchData = async () => {
     try {
@@ -93,6 +96,13 @@ const DataPresensi = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
+  const handleImagePreview = (imageUrl, status) => {
+    setCurrentImage(imageUrl);
+    setCurrentStatus(status);
+    setShowModal(true);
+  };
+
+
   return (
     <div className="flex flex-col items-center justify-center text-black pt-24">
       <Toaster richColors />
@@ -106,6 +116,7 @@ const DataPresensi = () => {
               <th className="py-2 cursor-pointer" onClick={() => handleSort("tanggal")}>Tanggal</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort("waktuAbsen")}>Waktu Absen</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort("status")}>Status</th>
+              <th className="py-2 cursor-pointer">Bukti</th>
               <th>Hapus</th>
             </tr>
           </thead>
@@ -117,6 +128,18 @@ const DataPresensi = () => {
                 <td className="py-2 px-4 text-center">{formatDate(entry.tanggal)}</td>
                 <td className="py-2 px-4 text-center">{formatTime(entry.waktuAbsen)}</td>
                 <td className="py-2 px-4 text-center">{entry.status}</td>
+                <td className="py-2 px-4 text-center">
+                {entry.status.toLowerCase() === "masuk" ? (
+                  <button 
+                    onClick={() => handleImagePreview(entry.imageUrl, entry.status)}
+                    className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700"
+                  >
+                    Lihat Bukti
+                  </button>
+                ) : (
+                  <span className="text-gray-500">Tidak ada bukti</span>
+                )}
+                </td>
                 <td className="py-2 text-center">
                   <button
                   onClick={() => handleDelete(entry.npm)}
@@ -141,6 +164,34 @@ const DataPresensi = () => {
           </Link>
         </div>
       </div>
+      {showModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
+          {currentStatus.toLowerCase() === "masuk" ? (
+            <>
+              <img src={currentImage} alt="Bukti Presensi" className="max-w-full h-auto"/>
+              <button 
+                onClick={() => setShowModal(false)}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                Tutup
+              </button>
+            </>
+          ) : (
+            <div className="text-center p-4">
+              <p className="text-xl font-semibold mb-4">Tidak ada bukti gambar</p>
+              <p>Status: {currentStatus}</p>
+              <button 
+                onClick={() => setShowModal(false)}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Tutup
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
     </div>
   );
 };
