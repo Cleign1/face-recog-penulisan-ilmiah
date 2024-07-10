@@ -5,11 +5,9 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const npm = searchParams.get('npm');
-
     if (!npm) {
       return NextResponse.json({ error: 'NPM is required' }, { status: 400 });
     }
-
     const user = await db.user.findUnique({
       where: { npm },
       include: {
@@ -17,12 +15,22 @@ export async function GET(request) {
         dataDosen: true,
       },
     });
-
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-
     const userData = user.dataSiswa || user.dataDosen;
+
+    // Check for registered faces
+    const faceData = await db.faceData.findMany({
+      where: { npm: user.npm },
+    });
+
+    let faceRegistrationStatus;
+    if (faceData.length === 0) {
+      faceRegistrationStatus = "Wajah belum terdaftar";
+    } else {
+      faceRegistrationStatus = "Wajah sudah terdaftar";
+    }
 
     const response = {
       npm: user.npm,
@@ -31,14 +39,15 @@ export async function GET(request) {
       kelas: userData.kelas,
       nomorHp: userData.nomorHp,
       alamat: userData.alamat,
+      faceRegistrationStatus: faceRegistrationStatus,
     };
-
     return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching user data:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 export async function PUT(request) {
   try {
