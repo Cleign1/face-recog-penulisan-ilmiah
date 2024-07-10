@@ -19,7 +19,6 @@ export async function POST(request) {
         kelas,
         nomorHp,
         alamat,
-        image_url
       }
     });
 
