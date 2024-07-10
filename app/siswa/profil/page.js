@@ -12,7 +12,8 @@ export default function Profil() {
     nama: '',
     alamat: '',
     kelas: '',
-    nomorHp: ''
+    nomorHp: '',
+    faceRegistrationStatus: ''
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +33,11 @@ export default function Profil() {
           setUserData(data);
         } catch (error) {
           console.error('Error fetching user data:', error);
-          // toast.error('Gagal mengambil data pengguna');
+          Swal.fire({
+            title: "Error",
+            text: "Gagal mengambil data pengguna",
+            icon: "error",
+          });
         } finally {
           setIsLoading(false);
         }
@@ -172,6 +177,12 @@ export default function Profil() {
                 onChange={handleInputChange}
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Status Pendaftaran Wajah
+              </label>
+              <p className="text-gray-700">{userData.faceRegistrationStatus}</p>
+            </div>
             <div className="flex items-center justify-between">
               <button
                 onClick={() => router.push("/siswa/presensi/daftar")}
@@ -188,9 +199,9 @@ export default function Profil() {
                 {isSaving ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
-          <div>
-            <h1 className='text-black text-center pt-5'>Jika Data yang muncul hanya NPM, Hubungi Admin</h1>
-          </div>
+            <div>
+              <h1 className='text-black text-center pt-5'>Jika Data yang muncul hanya NPM, Hubungi Admin</h1>
+            </div>
           </form>
         </div>
       </Layout>
