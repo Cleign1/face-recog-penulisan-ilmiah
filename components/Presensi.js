@@ -57,7 +57,6 @@ export default function Presensi() {
         };
       }
     } catch (error) {
-      // console.error("Error starting camera:", error);
       Swal.fire({
         title: "Error",
         text: `Error Memulai Kamera: ${error}`,
@@ -72,6 +71,17 @@ export default function Presensi() {
       tracks.forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
+  };
+
+  const captureImage = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
+      return canvas.toDataURL('image/jpeg');
+    }
+    return null;
   };
 
   const recognizeFace = async () => {
@@ -112,8 +122,6 @@ export default function Presensi() {
         }
       });
     } else {
-      // console.log('No face detected');
-      // alert('No face detected. Please try again.');
       Swal.fire({
         title: "Error",
         text: "Tidak ada wajah yang terdeteksi. Silahkan coba lagi.",
@@ -126,10 +134,19 @@ export default function Presensi() {
 
   const submitAttendance = async (name, npm) => {
     if (!name || !npm) {
-      console.log('No face recognized. Please try again.');
       Swal.fire({
         title: "Error",
         text: "Tidak ada wajah yang dikenal. Silahkan coba lagi",
+        icon: "error"
+      })
+      return;
+    }
+
+    const imageData = captureImage();
+    if (!imageData) {
+      Swal.fire({
+        title: "Error",
+        text: "Gagal mengambil gambar. Pastikan kamera aktif.",
         icon: "error"
       })
       return;
@@ -145,15 +162,14 @@ export default function Presensi() {
           nama: name,
           npm: npm,
           waktuAbsen: new Date().toISOString(),
-          status: 'Masuk'
+          status: 'Masuk',
+          imageData: imageData
         }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // console.log('Attendance recorded successfully!');
-        // alert('Attendance recorded successfully!');
         Swal.fire({
           title: "Berhasil",
           text: "Presensi berhasil direkam",
@@ -161,8 +177,6 @@ export default function Presensi() {
         })
         setAttendanceSubmitted(true);
       } else {
-        // console.error(`Failed to record attendance: ${result.message}`);
-        // alert(`Failed to record attendance: ${result.message}`);
         Swal.fire({
           title: "Error",
           text:`Gagal untuk merekam presensi: ${result.message}`,
@@ -170,8 +184,6 @@ export default function Presensi() {
         })
       }
     } catch (error) {
-      // console.error('Error submitting attendance:', error);
-      // alert('An error occurred while submitting attendance.');
       Swal.fire({
         title: "Error",
         text: `Terjadi error ketika mengirim presensi: ${error}`,
@@ -189,7 +201,6 @@ export default function Presensi() {
 
   const handlePresensi = () => {
     if (!isCameraOn) {
-      // alert('Please turn on the camera first.');
       Swal.fire({
         title: "Error",
         text: "Mohon Hidupkan Kamera Dahulu",
@@ -198,10 +209,20 @@ export default function Presensi() {
       return;
     }
     if (attendanceSubmitted) {
-      alert('Attendance has already been submitted for this session.');
+      Swal.fire({
+        title: "Info",
+        text: "Presensi sudah direkam untuk sesi ini.",
+        icon: "info"
+      });
       return;
     }
     recognizeFace();
+  };
+
+  const handleBack = () => {
+    stopCamera();
+    setIsCameraOn(false);
+    router.push("/siswa");
   };
 
   return (
@@ -236,13 +257,13 @@ export default function Presensi() {
           {isProcessing ? 'Memproses...' : 'Presensi'}
         </button>
         <button
-          onClick={() => router.push("/siswa")}
+          onClick={handleBack}
           className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
             Kembali
         </button>
       </div>
-        <h1 className='text-black'>Untuk melakukan presensi, mohon tekan tombol Presensi.</h1>
-        <h1 className='text-black'>Setelah Presensi mohon matikan kamera kembali.</h1>
+      <h1 className='text-black'>Untuk melakukan presensi, mohon tekan tombol Presensi.</h1>
+      <h1 className='text-black'>Setelah Presensi mohon matikan kamera kembali.</h1>
     </div>
   );
 }
