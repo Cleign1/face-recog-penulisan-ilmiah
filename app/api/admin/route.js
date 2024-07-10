@@ -29,9 +29,9 @@ export async function GET(req) {
                 waktuCreatedAt: createdAt.toTimeString().split(' ')[0],
                 tanggalUpdatedAt: updatedAt.toISOString().split("T")[0],
                 waktuUpdatedAt: updatedAt.toTimeString().split(" ")[0],
-
             };
         });
+
         return NextResponse.json(response, { status: 200 });
     } catch (error) {
         console.error("Error fetching face data:", error);
