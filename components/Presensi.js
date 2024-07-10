@@ -13,6 +13,7 @@ export default function Presensi() {
   const [recognizedNPM, setRecognizedNPM] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [attendanceSubmitted, setAttendanceSubmitted] = useState(false);
+  const [faceDetected, setFaceDetected] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [labeledFaceDescriptors, setLabeledFaceDescriptors] = useState([]);
@@ -32,7 +33,7 @@ export default function Presensi() {
   }, [isCameraOn]);
 
   async function loadModelsAndData() {
-    await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
+    await faceapi.nets.tinyFaceDetector.loadFromUri(modelPath);
     await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
     await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
 
@@ -56,6 +57,7 @@ export default function Presensi() {
           videoRef.current.play();
         };
       }
+      startFaceDetection();
     } catch (error) {
       Swal.fire({
         title: "Error",
@@ -71,6 +73,7 @@ export default function Presensi() {
       tracks.forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
+    setFaceDetected(false);
   };
 
   const captureImage = () => {
@@ -82,6 +85,41 @@ export default function Presensi() {
       return canvas.toDataURL('image/jpeg');
     }
     return null;
+  };
+
+  const startFaceDetection = () => {
+    if (!videoRef.current) return;
+
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+
+    const detectFaces = async () => {
+      if (video.videoWidth === 0 || video.videoHeight === 0) {
+        requestAnimationFrame(detectFaces);
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const displaySize = { width: video.videoWidth, height: video.videoHeight };
+      faceapi.matchDimensions(canvas, displaySize);
+
+      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks();
+
+      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      faceapi.draw.drawDetections(canvas, resizedDetections);
+
+      setFaceDetected(detections.length > 0);
+
+      if (isCameraOn) {
+        requestAnimationFrame(detectFaces);
+      }
+    };
+
+    detectFaces();
   };
 
   const recognizeFace = async () => {
@@ -97,7 +135,7 @@ export default function Presensi() {
     const displaySize = { width: video.videoWidth, height: video.videoHeight };
     faceapi.matchDimensions(canvas, displaySize);
 
-    const detections = await faceapi.detectAllFaces(video)
+    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
       .withFaceDescriptors();
 
@@ -197,6 +235,7 @@ export default function Presensi() {
     setAttendanceSubmitted(false);
     setRecognizedName('');
     setRecognizedNPM('');
+    setFaceDetected(false);
   };
 
   const handlePresensi = () => {
@@ -238,6 +277,11 @@ export default function Presensi() {
         ></video>
         <canvas ref={canvasRef} className="absolute w-full h-full"></canvas>
       </div>
+      {faceDetected && (
+        <p className="text-green-600 font-bold mb-2">
+          Wajah Terdeteksi
+        </p>
+      )}
       <div className="mb-4">
         <p>Nama yang Teridentifikasi: {recognizedName}</p>
         <p>NPM yang Teridentifikasi: {recognizedNPM}</p>
