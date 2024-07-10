@@ -38,4 +38,17 @@ Critical dependency: require function is used in a way in which dependencies can
 
 Import trace for requested module:
 ./node_modules/.pnpm/@vladmandic+face-api@1.7.13/node_modules/@vladmandic/face-api/dist/face-api.esm.js
-./app/siswa/presensi/page.js```
+./app /siswa/presensi/page.js
+```
+
+## Update
+- Ketua kelas bisa sebagai admin
+- 
+## Fix
+- [ ] ubah siswa menjadi mahasiswa
+- [x] capture face sekalian pas register face
+- [x] capture face sekalian pas presensi
+- [ ] tambahkan bukti wajah pada saat daftar
+- [ ] tambahkan bukti wajah pada saat daftar
+- [ ] tampilin bukti wajah daftar di admin dan dosen
+- [ ] tampilin bukti wajah presensi di admin dan dosen
