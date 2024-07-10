@@ -3,6 +3,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as faceapi from '@vladmandic/face-api';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
+import { toast } from 'sonner';
+import { Toaster } from 'sonner';
 
 const modelPath = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
 
@@ -28,6 +31,17 @@ export default function FaceRecognition() {
     }
     return () => stopCamera();
   }, [isCameraOn]);
+  
+  const captureImage = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
+      return canvas.toDataURL('image/jpeg');
+    }
+    return null;
+  };
 
   async function loadModels() {
     await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
@@ -45,7 +59,8 @@ export default function FaceRecognition() {
         };
       }
     } catch (error) {
-      console.error("Error starting camera:", error);
+      // console.error("Error Memulai Kamera:", error);
+      toast.error("Error Memulai Kamera: " + error);
     }
   };
 
@@ -103,16 +118,23 @@ export default function FaceRecognition() {
   };
 
   const saveToJSON = async () => {
-    if (!name || !faceDescriptor) {
-      alert('Please enter a name and ensure a face is detected before saving.');
+    if (!name || !npm || !faceDescriptor) {
+      toast.warning("Mohon masukkan nama, NPM, dan pastikan wajah terdeteksi sebelum menyimpan.");
+      return;
+    }
+
+    const imageData = captureImage();
+    if (!imageData) {
+      toast.error("Gagal mengambil gambar. Pastikan kamera aktif.");
       return;
     }
 
     const data = {
-        name: name,
-        npm: npm,
-        faceDescriptor: Array.from(faceDescriptor)
-      };
+      name: name,
+      npm: npm,
+      faceDescriptor: Array.from(faceDescriptor),
+      imageData: imageData
+    };
 
     try {
       const response = await fetch('/api/saveface', {
@@ -126,23 +148,32 @@ export default function FaceRecognition() {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Face data saved successfully!');
+        Swal.fire({
+          title: "Sukses",
+          text: "Data wajah berhasil disimpan!",
+          icon: "success",
+        });
         setName('');
         setNPM('');
         setFaceDescriptor(null);
-        router.push("/siswa/presensi");
+        toast.warning("Sebelum keluar dari halaman ini, harap matikan kamera terlebih dahulu");
       } else {
-        console.error('Failed to save face data:', result);
-        alert(`Failed to save face data: ${result.message}`);
+        toast.error(`Failed to save face data: ${result.message}`);
       }
     } catch (error) {
-      console.error('Error saving face data:', error);
-      alert('An error occurred while saving face data.');
+      toast.error('Terjadi kesalahan saat menyimpan data wajah.');
     }
+  };
+
+  const handleBack = () => {
+    stopCamera();
+    setIsCameraOn(false);
+    router.push("/siswa/profil");
   };
 
   return (
     <div className="w-full max-w-3xl bg-white p-8 rounded shadow">
+      <Toaster richColors />
       <h1 className="text-2xl font-bold mb-4">Pendaftaran Wajah</h1>
       <div className="relative border border-gray-300 w-full h-96 flex items-center justify-center mb-4">
         <video
@@ -183,6 +214,12 @@ export default function FaceRecognition() {
           disabled={!faceDescriptor}
         >
           Simpan
+        </button> 
+        <button
+          onClick={handleBack}
+          className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+        >
+          Kembali
         </button>
       </div>
       {faceDescriptor && (
