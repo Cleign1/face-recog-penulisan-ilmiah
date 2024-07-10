@@ -47,13 +47,14 @@ model DataDosen {
 }
 
 model Presensi {
-  id         Int       @id @default(autoincrement())
-  tanggal    DateTime  @default(now()) @db.Timestamptz(6)
-  nama       String
-  npm        String    @unique
-  waktuAbsen DateTime  @map("waktu_absen")
-  status     String
-  siswa      DataSiswa @relation(fields: [npm], references: [npm])
+  id           Int       @id @default(autoincrement())
+  tanggal      DateTime  @default(now()) @db.Timestamptz(6)
+  nama         String
+  npm          String    @unique
+  waktuAbsen   DateTime  @map("waktu_absen")
+  status       String
+  imageUrl     String?   @map("image_url") // New column for storing image URL from Google Cloud Storage
+  siswa        DataSiswa @relation(fields: [npm], references: [npm])
 }
 
 model FaceData {
@@ -61,6 +62,7 @@ model FaceData {
   name           String
   npm            String   @unique
   faceDescriptor Json
+  imageUrl       String?  @map("image_url") // Updated column for storing image URL from Google Cloud Storage
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
   dataSiswa      DataSiswa @relation(fields: [npm], references: [npm])
