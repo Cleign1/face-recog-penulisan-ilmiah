@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
 import { useSession } from 'next-auth/react';
+import { toast, Toaster } from 'sonner';
 
 export default function ProfilDosen() {
   const [userData, setUserData] = useState({
@@ -51,7 +52,7 @@ export default function ProfilDosen() {
     setIsSaving(true);
     try {
       const response = await fetch('/api/data', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -63,11 +64,11 @@ export default function ProfilDosen() {
       }
 
       const result = await response.json();
-      console.log('Data updated successfully:', result);
-      // toast.success('Data berhasil diperbarui');
+      // console.log('Data updated successfully:', result);
+      toast.success('Data berhasil diperbarui');
     } catch (error) {
-      console.error('Error updating user data:', error);
-      // toast.error('Gagal memperbarui data');
+      // console.error('Error updating user data:', error);
+      toast.error('Gagal memperbarui data');
     } finally {
       setIsSaving(false);
     }
@@ -80,6 +81,7 @@ export default function ProfilDosen() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 flex">
       <LayoutDosen>
+        <Toaster richColors />
         <div className="flex flex-col items-center justify-center w-full p-6">
           <h1 className="text-4xl font-bold mb-8 text-black">Profil {userData.nama}</h1>
           <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded shadow">
