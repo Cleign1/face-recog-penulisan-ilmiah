@@ -4,14 +4,15 @@ import { Storage } from '@google-cloud/storage';
 import { v4 as uuidv4 } from 'uuid';
 
 const storage = new Storage({
-  projectId: "buat-maen2-aja",
+  projectId: process.env.PROJECT_ID,
   credentials: {
     client_email: process.env.CLIENT_EMAIL,
     private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n"),
+    bucket: process.env.BUCKET_NAME
   }
 });
 
-const bucket = storage.bucket("face-recog-ibnu-stoage");
+const bucket = storage.bucket(process.env.BUCKET_NAME);
 
 async function uploadToGoogleCloudStorage(imageData, fileName) {
   const file = bucket.file(`absensi_proof/${fileName}`);  // Changed folder name to 'absensi_proof'
