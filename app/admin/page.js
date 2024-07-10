@@ -42,9 +42,10 @@ export default function DashboardAdmin() {
             </p>
             <ul className="text-left list-disc list-inside mb-4">
               <li>Kelola Data Pengguna/User</li>
-              <li>Kelola Data Siswa</li>
+              <li>Kelola Data Mahasiswa</li>
               <li>Kelola Data Dosen</li>
-              <li>Kelola Data Presensi Siswa</li>
+              <li>Kelola Data Presensi Siswa beserta buktinya</li>
+              <li>Kelola Data Registrasi Wajah Siswa beserta buktinya</li>
             </ul>
           </div>
         </div>
