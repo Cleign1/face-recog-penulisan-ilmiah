@@ -86,7 +86,7 @@ const DataSiswa = () => {
     <div className="flex flex-col items-center justify-center text-black pt-24">
       <Toaster richColors />
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-7xl">
-        <h1 className="text-2xl font-bold mb-4">Data Siswa</h1>
+        <h1 className="text-2xl font-bold mb-4">Data Mahasiswa</h1>
         <table className="min-w-full bg-white">
           <thead>
             <tr>
