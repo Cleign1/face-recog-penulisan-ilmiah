@@ -44,9 +44,16 @@ export default function FaceRecognition() {
   };
 
   async function loadModels() {
-    await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
-    await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
-    await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri(modelPath);
+      await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
+      await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
+      // console.log('Models loaded successfully');
+      toast.success('Models loaded successfully');
+    } catch (error) {
+      // console.error('Error loading models:', error);
+      toast.error('Failed to load face recognition models');
+    }
   }
 
   const startCamera = async () => {
@@ -59,7 +66,6 @@ export default function FaceRecognition() {
         };
       }
     } catch (error) {
-      // console.error("Error Memulai Kamera:", error);
       toast.error("Error Memulai Kamera: " + error);
     }
   };
@@ -93,7 +99,7 @@ export default function FaceRecognition() {
       const displaySize = { width: video.videoWidth, height: video.videoHeight };
       faceapi.matchDimensions(canvas, displaySize);
 
-      const detections = await faceapi.detectAllFaces(video)
+      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceDescriptors();
 
@@ -174,7 +180,7 @@ export default function FaceRecognition() {
   return (
     <div className="w-full max-w-3xl bg-white p-8 rounded shadow">
       <Toaster richColors />
-      <h1 className="text-2xl font-bold mb-4">Pendaftaran Wajah</h1>
+      <h1 className="text-2xl font-bold mb-4">Pendaftaran/Perbaharui Wajah</h1>
       <div className="relative border border-gray-300 w-full h-96 flex items-center justify-center mb-4">
         <video
           ref={videoRef}
@@ -191,7 +197,7 @@ export default function FaceRecognition() {
           placeholder="Masukkan nama"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="w-full px-3 py-2 border rounded mb-2"
         />
         <input
           type="text"
