@@ -13,7 +13,7 @@ const DataWajah = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/admin");
+      const response = await fetch("/api/admindata");
       if (!response.ok) {
         throw new Error("Failed to fetch face data");
       }
