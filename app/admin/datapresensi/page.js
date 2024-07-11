@@ -84,16 +84,22 @@ const DataPresensi = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toISOString().split('T')[0];
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split('/').join('-');
   };
   
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    date.setUTCHours(date.getUTCHours() + 7); // Menambah 7 jam ke waktu UTC
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+    return date.toLocaleTimeString('id-ID', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      hour12: false 
+    }).split(".").join(':');
   };
 
   const handleImagePreview = (imageUrl, status) => {
