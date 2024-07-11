@@ -45,51 +45,44 @@ async function uploadToGoogleCloudStorage(imageData, fileName) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { nama, npm, waktuAbsen, status, imageData } = body;
+    const { nama, npm ,waktuAbsen, status, imageData } = body;
 
-    // Ensure all required data is present
     if (!(nama && npm && waktuAbsen && status && imageData)) {
       return NextResponse.json({ message: 'Data tidak lengkap!', receivedData: body }, { status: 400 });
     }
 
-    // Check if the student exists
     const student = await db.dataSiswa.findUnique({
       where: { npm: npm }
-    });
+    }); 
 
     if (!student) {
       return NextResponse.json({ message: 'Siswa tidak ditemukan!', npm: npm }, { status: 404 });
     }
 
-    // Get the current date (without time)
     const currentDate = new Date(waktuAbsen);
     currentDate.setHours(0, 0, 0, 0);
 
-    // Check if an attendance record already exists for this student on the current date
+    // Periksa apakah sudah ada presensi untuk siswa ini pada tanggal yang sama
     const existingAttendance = await db.presensi.findFirst({
       where: {
         npm: npm,
         tanggal: {
           gte: currentDate,
-          lt: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // Next day
+          lt: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // Hari berikutnya
         },
       },
     });
 
     if (existingAttendance) {
       return NextResponse.json({
-        message: 'Presensi sudah direkam untuk siswa ini hari ini.',
+        message: 'Presensi sudah direkam untuk siswa ini pada tanggal ini.',
         existingRecord: existingAttendance
       }, { status: 409 });
     }
 
-    // Generate a unique filename for the image
     const fileName = `${npm}_${uuidv4()}.jpg`;
-
-    // Upload the image to Google Cloud Storage
     const imageUrl = await uploadToGoogleCloudStorage(imageData, fileName);
 
-    // Save attendance data to the database
     const newAttendance = await db.presensi.create({
       data: {
         nama,
@@ -97,20 +90,24 @@ export async function POST(request) {
         tanggal: currentDate,
         waktuAbsen: new Date(waktuAbsen),
         status,
-        imageUrl, // Add the image URL to the attendance record
+        imageUrl,
       }
     });
 
-    console.log('Presensi direkam:', newAttendance);  // Log successful attendance
+    console.log('Presensi direkam:', newAttendance);
     return NextResponse.json(newAttendance, { status: 201 });
-
   } catch (error) {
     console.error('Server error:', error);
-   
+    if (error.code === 'P2002') {
+      return NextResponse.json({
+        message: 'Presensi sudah ada untuk siswa ini pada tanggal ini.',
+        error: error.message
+      }, { status: 409 });
+    }
     return NextResponse.json({
       message: 'Server error',
       error: error.message,
-      stack: error.stack  // Include stack trace for debugging
+      stack: error.stack
     }, { status: 500 });
   }
 }
