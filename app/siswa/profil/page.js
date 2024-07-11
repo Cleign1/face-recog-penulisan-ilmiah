@@ -95,7 +95,7 @@ export default function Profil() {
     <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 flex">
       <Layout>
         <div className="flex flex-col items-center justify-center w-full p-6">
-          <h1 className="text-4xl font-bold mb-8 text-black">Profil {userData.nama}</h1>
+          <h1 className="text-2xl font-bold mb-8 text-black">Profil {userData.nama}</h1>
           <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded shadow">
             <div className="mb-4">
               <label
