@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { LayoutAdmin } from "@/components/Sidebar_admin/Layout-Admin";
 import { toast, Toaster } from "sonner";
-import Swal from "sweetalert2";
 
 const DataWajah = () => {
   const [faces, setFaces] = useState([]);
@@ -43,7 +42,6 @@ const DataWajah = () => {
     );
   };
 
-
   const handleImagePreview = (imageUrl) => {
     setCurrentImage(imageUrl);
     setShowModal(true);
@@ -57,7 +55,7 @@ const DataWajah = () => {
       day: '2-digit' 
     }).split('/').join('-');
   };
-  
+
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString('id-ID', { 
@@ -65,9 +63,8 @@ const DataWajah = () => {
       minute: '2-digit', 
       second: '2-digit', 
       hour12: false 
-    }).split(".").join(':');
+    });
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center text-black pt-24">
@@ -80,10 +77,10 @@ const DataWajah = () => {
               <th className="py-2 cursor-pointer" onClick={() => handleSort("npm")}>NPM</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort("nama")}>Nama</th>
               <th className="py-2 cursor-pointer">Gambar Wajah</th>
-              <th className="py-2 cursor-pointer" onClick={() => handleSort("tanggalCreatedAt")}>Dibuat</th>
-              <th className="py-2 cursor-pointer" onClick={() => handleSort("waktuCreatedAt")}>Waktu Dibuat</th>
-              <th className="py-2 cursor-pointer" onClick={() => handleSort("tanggalCreatedAt")}>Update</th>
-              <th className="py-2 cursor-pointer" onClick={() => handleSort("waktuCreatedAt")}>Waktu Update</th>
+              <th className="py-2 cursor-pointer" onClick={() => handleSort("createdAt")}>Dibuat</th>
+              <th className="py-2 cursor-pointer" onClick={() => handleSort("createdAt")}>Waktu Dibuat</th>
+              <th className="py-2 cursor-pointer" onClick={() => handleSort("updatedAt")}>Update</th>
+              <th className="py-2 cursor-pointer" onClick={() => handleSort("updatedAt")}>Waktu Update</th>
             </tr>
           </thead>
           <tbody>
@@ -103,10 +100,10 @@ const DataWajah = () => {
                     <span className="text-gray-500">Tidak ada gambar</span>
                   )}
                 </td>
-                <td className="py-2 px-4 text-center">{formatDate(entry.tanggalCreatedAt)}</td>
-                <td className="py-2 px-4 text-center">{formatTime(entry.waktuCreatedAt)}</td>
-                <td className="py-2 px-4 text-center">{formatDate(entry.tanggalUpdatedAt)}</td>
-                <td className="py-2 px-4 text-center">{formatTime(entry.waktuUpdatedAt)}</td>
+                <td className="py-2 px-4 text-center">{formatDate(entry.createdAt)}</td>
+                <td className="py-2 px-4 text-center">{formatTime(entry.createdAt)}</td>
+                <td className="py-2 px-4 text-center">{formatDate(entry.updatedAt)}</td>
+                <td className="py-2 px-4 text-center">{formatTime(entry.updatedAt)}</td>
               </tr>
             ))}
           </tbody>
