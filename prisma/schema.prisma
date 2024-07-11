@@ -25,15 +25,15 @@ model User {
 }
 
 model DataSiswa {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   nama        String
-  npm         String    @unique
+  npm         String      @unique
   kelas       String
-  nomorHp     String    @map("nomor_hp")
+  nomorHp     String      @map("nomor_hp")
   alamat      String
-  presensi    Presensi?
+  presensi    Presensi[]  // Changed to array to indicate one-to-many relationship
   faceData    FaceData?
-  user        User      @relation(fields: [npm], references: [npm])
+  user        User        @relation(fields: [npm], references: [npm])
 }
 
 model DataDosen {
@@ -50,11 +50,13 @@ model Presensi {
   id           Int       @id @default(autoincrement())
   tanggal      DateTime  @default(now()) @db.Timestamptz(6)
   nama         String
-  npm          String    @unique
+  npm          String    // Removed @unique constraint @unique
   waktuAbsen   DateTime  @map("waktu_absen")
   status       String
-  imageUrl     String?   @map("image_url") // New column for storing image URL from Google Cloud Storage
+  imageUrl     String?   @map("image_url")
   siswa        DataSiswa @relation(fields: [npm], references: [npm])
+
+  @@unique([npm, tanggal]) // Added composite unique constraint
 }
 
 model FaceData {
