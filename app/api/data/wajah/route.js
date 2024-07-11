@@ -1,7 +1,10 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req) {
+// Add this line to force the route to be dynamic
+export const dynamic = 'force-dynamic';
+
+export async function GET(request) {
     try {
         const faceData = await db.faceData.findMany({
             select: {
@@ -12,7 +15,6 @@ export async function GET(req) {
                 updatedAt: true
             }
         });
-
         const response = faceData.map(face => ({
             npm: face.npm,
             nama: face.name,
@@ -20,7 +22,6 @@ export async function GET(req) {
             createdAt: face.createdAt.toISOString(),
             updatedAt: face.updatedAt.toISOString()
         }));
-
         return NextResponse.json(response, { status: 200 });
     } catch (error) {
         console.error("Error fetching face data:", error);
