@@ -49,6 +49,26 @@ const DataWajah = () => {
     setShowModal(true);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split('/').join('-');
+  };
+  
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('id-ID', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      hour12: false 
+    }).split(".").join(':');
+  };
+
+
   return (
     <div className="flex flex-col items-center justify-center text-black pt-24">
       <Toaster richColors />
@@ -83,10 +103,10 @@ const DataWajah = () => {
                     <span className="text-gray-500">Tidak ada gambar</span>
                   )}
                 </td>
-                <td className="py-2 px-4 text-center">{entry.tanggalCreatedAt}</td>
-                <td className="py-2 px-4 text-center">{entry.waktuCreatedAt}</td>
-                <td className="py-2 px-4 text-center">{entry.tanggalUpdatedAt}</td>
-                <td className="py-2 px-4 text-center">{entry.waktuUpdatedAt}</td>
+                <td className="py-2 px-4 text-center">{formatDate(entry.tanggalCreatedAt)}</td>
+                <td className="py-2 px-4 text-center">{formatTime(entry.waktuCreatedAt)}</td>
+                <td className="py-2 px-4 text-center">{formatDate(entry.tanggalUpdatedAt)}</td>
+                <td className="py-2 px-4 text-center">{formatTime(entry.waktuUpdatedAt)}</td>
               </tr>
             ))}
           </tbody>
