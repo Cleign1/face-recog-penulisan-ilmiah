@@ -17,7 +17,7 @@ const DataPresensi = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`/api/absensi`);
+      const response = await fetch(`/api/absensidata`);
       if (!response.ok) {
         throw new Error("Failed to fetch presensi");
       }
@@ -46,7 +46,7 @@ const DataPresensi = () => {
     );
   };
 
-  const handleDelete = async (npm) => {
+  const handleDelete = async (id) => {
     const confirmed = await Swal.fire({
       title: 'Apakah Anda yakin?',
       text: "Data absensi ini akan dihapus secara permanen!",
@@ -59,12 +59,12 @@ const DataPresensi = () => {
 
     if (confirmed.isConfirmed) {
       try {
-        const response = await fetch(`/api/absensi`, {
+        const response = await fetch(`/api/absensidata`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ npm }),
+          body: JSON.stringify({ id }),
         });
 
         if (!response.ok) {
@@ -148,7 +148,7 @@ const DataPresensi = () => {
                 </td>
                 <td className="py-2 text-center">
                   <button
-                  onClick={() => handleDelete(entry.npm)}
+                  onClick={() => handleDelete(entry.id)}
                     className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-700">
                     Hapus
                   </button>
