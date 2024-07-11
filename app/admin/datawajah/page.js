@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { LayoutAdmin } from "@/components/Sidebar_admin/Layout-Admin";
 import { toast, Toaster } from "sonner";
+import Swal from "sweetalert2";
 
 const DataWajah = () => {
   const [faces, setFaces] = useState([]);
@@ -47,6 +48,54 @@ const DataWajah = () => {
     setShowModal(true);
   };
 
+  const handleDelete = async (npm) => {
+    const result = await Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Data wajah ini akan dihapus secara permanen!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch('/api/data/wajah', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ npm }),
+        });
+
+        if (response.ok) {
+          setFaces(faces.filter(face => face.npm !== npm));
+          Swal.fire({
+            title: "Berhasil",
+            text: "Data wajah berhasil dihapus",
+            icon: "success",
+          });
+        } else {
+          const errorData = await response.json();
+          Swal.fire({
+            title: "Gagal Menghapus Data",
+            text: errorData.error || 'Terjadi kesalahan saat menghapus data.',
+            icon: "error"
+          });
+        }
+      } catch (error) {
+        console.error('Error deleting face data:', error);
+        Swal.fire({
+          title: "Gagal",
+          text: "Terjadi kesalahan saat menghapus data. Silakan coba lagi.",
+          icon: "error"
+        });
+      }
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('id-ID', { 
@@ -81,6 +130,7 @@ const DataWajah = () => {
               <th className="py-2 cursor-pointer" onClick={() => handleSort("createdAt")}>Waktu Dibuat</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort("updatedAt")}>Update</th>
               <th className="py-2 cursor-pointer" onClick={() => handleSort("updatedAt")}>Waktu Update</th>
+              <th className="py-2">Hapus</th>
             </tr>
           </thead>
           <tbody>
@@ -104,6 +154,14 @@ const DataWajah = () => {
                 <td className="py-2 px-4 text-center">{formatTime(entry.createdAt)}</td>
                 <td className="py-2 px-4 text-center">{formatDate(entry.updatedAt)}</td>
                 <td className="py-2 px-4 text-center">{formatTime(entry.updatedAt)}</td>
+                <td className="py-2 px-4 text-center">
+                  <button
+                    onClick={() => handleDelete(entry.npm)}
+                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-700"
+                  >
+                    Hapus
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
