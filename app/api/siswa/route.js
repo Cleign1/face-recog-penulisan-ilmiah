@@ -58,6 +58,6 @@ export async function DELETE(request) {
 
     return NextResponse.json({ message: 'Data siswa berhasil dihapus.' }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Hapus Data Wajah & Presensi Terlebih dahulu' }, { status: 500 });
   }
 }
