@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-// API untuk mendapatkan data wajah (GET)
 export async function GET(req) {
     try {
         const faceData = await db.faceData.findMany({
@@ -14,23 +13,13 @@ export async function GET(req) {
             }
         });
 
-        const response = faceData.map(face => {
-            const createdAt = new Date(face.createdAt);
-            createdAt.setUTCHours(createdAt.getUTCHours());
-            
-            const updatedAt = new Date(face.updatedAt);
-            updatedAt.setUTCHours(updatedAt.getUTCHours());
-
-            return {
-                npm: face.npm,
-                nama: face.name,
-                imageUrl: face.imageUrl,
-                tanggalCreatedAt: createdAt.toISOString().split('T')[0],
-                waktuCreatedAt: createdAt.toTimeString().split(' ')[0],
-                tanggalUpdatedAt: updatedAt.toISOString().split("T")[0],
-                waktuUpdatedAt: updatedAt.toTimeString().split(" ")[0],
-            };
-        });
+        const response = faceData.map(face => ({
+            npm: face.npm,
+            nama: face.name,
+            imageUrl: face.imageUrl,
+            createdAt: face.createdAt.toISOString(),
+            updatedAt: face.updatedAt.toISOString()
+        }));
 
         return NextResponse.json(response, { status: 200 });
     } catch (error) {
