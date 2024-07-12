@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "devip": "next dev -H 192.168.1.50",
+    "devip": "next dev -H 0.0.0.0 -p 80",
     "build": "next build",
     "start": "next start",
+    "startip": "next start -H 0.0.0.0 -p 80",
     "lint": "next lint",
     "postinstall": "pnpm exec prisma generate"
   },
