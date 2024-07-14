@@ -87,11 +87,20 @@ export async function GET(req) {
 // API untuk menghapus data absensi (DELETE)
 export async function DELETE(req) {
     try {
-        const { npm } = await req.json();
+        const { npm, tanggal } = await req.json();
+
+        if (!npm || !tanggal) {
+            return NextResponse.json({ error: 'NPM dan tanggal diperlukan' }, { status: 400 });
+        }
 
         const absensi = await db.presensi.findUnique({
-            where: { npm },
-            select: { imageUrl: true }
+            where: {
+                npm_tanggal: {
+                    npm: npm,
+                    tanggal: new Date(tanggal)
+                }
+            },
+            select: { id: true, imageUrl: true }
         });
 
         if (!absensi) {
@@ -115,7 +124,7 @@ export async function DELETE(req) {
 
         // Delete the record from the database
         await db.presensi.delete({
-            where: { npm },
+            where: { id: absensi.id },
         });
 
         return NextResponse.json({ message: 'Data absensi dan gambar berhasil dihapus' }, { status: 200 });
