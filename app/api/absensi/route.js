@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Storage } from '@google-cloud/storage';
 
+export const dynamic = 'force-dynamic';
+
+
 const storage = new Storage({
     projectId: process.env.PROJECT_ID,
     credentials: {
