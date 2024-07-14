@@ -44,7 +44,7 @@ const DataPresensi = () => {
     );
   };
 
-  const handleDelete = async (npm) => {
+  const handleDelete = async (npm, tanggal) => {
     const confirmed = await Swal.fire({
       title: 'Apakah Anda yakin?',
       text: "Data absensi ini akan dihapus secara permanen!",
@@ -62,7 +62,7 @@ const DataPresensi = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ npm }),
+          body: JSON.stringify({ npm, tanggal }),
         });
 
         if (!response.ok) {
@@ -70,7 +70,6 @@ const DataPresensi = () => {
         }
 
         fetchData();
-        // toast.success('Data absensi berhasil dihapus!');
         Swal.fire({
           title: "Berhasil",
           text: "Berhasil Menghapus Data",
@@ -144,11 +143,11 @@ const DataPresensi = () => {
                 )}
                 </td>
                 <td className="py-2 text-center">
-                  <button
-                  onClick={() => handleDelete(entry.npm)}
-                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-700">
-                    Hapus
-                  </button>
+                <button
+                  onClick={() => handleDelete(entry.npm, entry.tanggal)}
+                  className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-700">
+                  Hapus
+                </button>
                 </td>
               </tr>
             ))}
