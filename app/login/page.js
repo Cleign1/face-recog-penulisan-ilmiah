@@ -45,7 +45,6 @@ const LoginPage = () => {
         router.push("/admin");
         break;
       default:
-        // Handle unexpected role
         console.error("Unexpected user role:", role);
         toast.error("Terjadi kesalahan. Silakan coba lagi.");
     }
@@ -75,7 +74,6 @@ const LoginPage = () => {
           icon: "success",
         });
         setLoginData({ username: "", password: "" });
-        // The redirection will be handled by the useEffect hook
       } else {
         toast.error("Username atau password salah");
       }
@@ -106,15 +104,6 @@ const LoginPage = () => {
       </Head>
       <div className="bg-white p-8 rounded-xl shadow-md max-w-md">
         <h1 className="text-2xl font-medium text-center mb-8">Login</h1>
-        {alert.message && (
-          <div
-            className={`alert ${
-              alert.status === "error" ? "alert-danger" : "alert-success"
-            }`}
-          >
-            {alert.message}
-          </div>
-        )}
         <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label htmlFor="username">Username</label>
@@ -153,7 +142,6 @@ const LoginPage = () => {
                 isClicked ? "bg-green-500" : "bg-blue-500"
               } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out`}
               type="submit"
-              onClick={() => setIsClicked(true)}
             >
               Masuk
             </button>
