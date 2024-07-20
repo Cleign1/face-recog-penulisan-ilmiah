@@ -25,20 +25,31 @@ const LoginPage = () => {
   const { data: session, status } = useSession();
   const [loginData, setLoginData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({});
-  const [alert, setAlert] = useState({ status: "", message: "" });
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
-    if (session?.user?.role) {
-      if (session.user.role === "siswa") {
-        router.push("/siswa");
-      } else if (session.user.role === "dosen") {
-        router.push("/dosen");
-      } else if (session.user.role === "admin") {
-        router.push("/admin");
-      }
+    if (status === "authenticated" && session?.user?.role) {
+      redirectBasedOnRole(session.user.role);
     }
-  }, [session, router]);
+  }, [session, status, router]);
+
+  const redirectBasedOnRole = (role) => {
+    switch (role) {
+      case "siswa":
+        router.push("/siswa");
+        break;
+      case "dosen":
+        router.push("/dosen");
+        break;
+      case "admin":
+        router.push("/admin");
+        break;
+      default:
+        // Handle unexpected role
+        console.error("Unexpected user role:", role);
+        toast.error("Terjadi kesalahan. Silakan coba lagi.");
+    }
+  };
 
   const onChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -52,36 +63,21 @@ const LoginPage = () => {
       setIsClicked(true);
 
       const result = await signIn("credentials", {
-        // redirect: false,
+        redirect: false,
         username: loginData.username,
         password: loginData.password,
       });
 
       if (result?.ok) {
-        // setAlert({ status: "success", message: "Masuk berhasil" });
         Swal.fire({
           title: "Berhasil",
           text: "Berhasil Login",
           icon: "success",
-        })
-        // toast.success("Masuk Berhasil");
+        });
         setLoginData({ username: "", password: "" });
-        setTimeout(() => {
-          if (session.user.role === "siswa") {
-            router.push("/siswa");
-          } else if (session.user.role === "dosen") {
-            router.push("/dosen");
-          } else if (session.user.role === "admin") {
-            router.push("/admin");
-          }
-        }, 10000);
+        // The redirection will be handled by the useEffect hook
       } else {
-        // setAlert({ status: "error", message: "Masuk gagal" });
-        // Swal.fire({
-        //   title: "Gagal",
-        //   text: "Gagal Masuk",
-        //   icon: "error"
-        // })
+        toast.error("Username atau password salah");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -91,14 +87,14 @@ const LoginPage = () => {
         }, {});
         setErrors(fieldErrors);
       } else {
-        // setAlert({ status: "error", message: "Something went wrong" });
-        // toast.error("Something went wrong");
         Swal.fire({
           title: "Error",
           text: "Terjadi Kesalahan",
           icon: "error"
-        })
+        });
       }
+    } finally {
+      setIsClicked(false);
     }
   };
 
