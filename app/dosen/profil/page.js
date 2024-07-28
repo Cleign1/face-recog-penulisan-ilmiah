@@ -4,14 +4,26 @@ import { useState, useEffect } from 'react';
 import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
 import { useSession } from 'next-auth/react';
 import { toast, Toaster } from 'sonner';
+import { z } from 'zod'; // Import Zod
+
+// Define Zod schema for user data
+const UserSchema = z.object({
+  nidn: z.string().min(1, "NIDN is required"),
+  nama: z.string().regex(/^[A-Za-z\s]+$/, "Nama harus hanya mengandung huruf").min(1, "Nama is required"),
+  kelas: z.string().min(1, "Kelas is required"),
+  alamat: z.string().min(1, "Alamat is required"),
+  nomorHp: z.string().regex(/^[0-9]+$/, "Nomor HP must contain only numbers").min(10, "Nomor HP must be at least 10 digits"),
+});
 
 export default function ProfilDosen() {
   const [userData, setUserData] = useState({
     nidn: '',
     nama: '',
+    kelas: '',
     alamat: '',
     nomorHp: ''
   });
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const { data: session } = useSession();
@@ -29,7 +41,7 @@ export default function ProfilDosen() {
           setUserData(data);
         } catch (error) {
           console.error('Error fetching user data:', error);
-          // toast.error('Gagal mengambil data pengguna');
+          toast.error('Gagal mengambil data pengguna');
         } finally {
           setIsLoading(false);
         }
@@ -45,12 +57,18 @@ export default function ProfilDosen() {
       ...prevData,
       [name]: value
     }));
+    // Clear error for this field when user starts typing
+    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    
     try {
+      // Validate data with Zod
+      UserSchema.parse(userData);
+      
       const response = await fetch('/api/data', {
         method: 'PUT',
         headers: {
@@ -64,11 +82,19 @@ export default function ProfilDosen() {
       }
 
       const result = await response.json();
-      // console.log('Data updated successfully:', result);
       toast.success('Data berhasil diperbarui');
     } catch (error) {
-      // console.error('Error updating user data:', error);
-      toast.error('Gagal memperbarui data');
+      console.error('Error updating user data:', error);
+      if (error instanceof z.ZodError) {
+        // Handle Zod validation errors
+        const newErrors = {};
+        error.errors.forEach((err) => {
+          newErrors[err.path[0]] = err.message;
+        });
+        setErrors(newErrors);
+      } else {
+        toast.error('Gagal memperbarui data');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -86,10 +112,7 @@ export default function ProfilDosen() {
           <h1 className="text-4xl font-bold mb-8 text-black">Profil {userData.nama}</h1>
           <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded shadow">
             <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="nidn"
-              >
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nidn">
                 NIDN
               </label>
               <input
@@ -97,73 +120,65 @@ export default function ProfilDosen() {
                 id="nidn"
                 name="nidn"
                 type="text"
-                value={userData.npm}
+                value={userData.nidn}
                 readOnly
               />
             </div>
             <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="nama"
-              >
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nama">
                 Nama
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.nama ? 'border-red-500' : ''}`}
                 id="nama"
                 name="nama"
                 type="text"
                 value={userData.nama}
                 onChange={handleInputChange}
               />
+              {errors.nama && <p className="text-red-500 text-xs italic">{errors.nama}</p>}
             </div>
             <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="kelas"
-              >
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="kelas">
                 Kelas
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.kelas ? 'border-red-500' : ''}`}
                 id="kelas"
                 name="kelas"
                 type="text"
                 value={userData.kelas}
                 onChange={handleInputChange}
               />
+              {errors.kelas && <p className="text-red-500 text-xs italic">{errors.kelas}</p>}
             </div>
             <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="alamat"
-              >
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="alamat">
                 Alamat
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.alamat ? 'border-red-500' : ''}`}
                 id="alamat"
                 name="alamat"
                 type="text"
                 value={userData.alamat}
                 onChange={handleInputChange}
               />
+              {errors.alamat && <p className="text-red-500 text-xs italic">{errors.alamat}</p>}
             </div>
             <div className="mb-6">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="nomorHp"
-              >
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nomorHp">
                 Nomor HP
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.nomorHp ? 'border-red-500' : ''}`}
                 id="nomorHp"
                 name="nomorHp"
                 type="text"
                 value={userData.nomorHp}
                 onChange={handleInputChange}
               />
+              {errors.nomorHp && <p className="text-red-500 text-xs italic">{errors.nomorHp}</p>}
             </div>
             <div className="flex items-center justify-between">
               <button
