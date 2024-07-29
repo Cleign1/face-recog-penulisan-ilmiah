@@ -8,7 +8,6 @@ import { z } from 'zod'; // Import Zod
 
 // Define Zod schema for user data
 const UserSchema = z.object({
-  nidn: z.string().min(1, "NIDN is required"),
   nama: z.string().regex(/^[A-Za-z\s]+$/, "Nama harus hanya mengandung huruf").min(1, "Nama is required"),
   kelas: z.string().min(1, "Kelas is required"),
   alamat: z.string().min(1, "Alamat is required"),
@@ -120,7 +119,7 @@ export default function ProfilDosen() {
                 id="nidn"
                 name="nidn"
                 type="text"
-                value={userData.nidn}
+                value={userData.npm}
                 readOnly
               />
             </div>
