@@ -15,11 +15,11 @@ This web-based attendance application provides an efficient and user-friendly wa
 ## Installation
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/attendance-app.git
+   git clone https://github.com/Cleign1/face-recog-penulisan-ilmiah
    ```
 2. Navigate to the project directory:
    ```
-   cd attendance-app
+   cd face-recog-penulisan-ilmiah
    ```
 3. Install dependencies:
    ```
@@ -38,7 +38,7 @@ This web-based attendance application provides an efficient and user-friendly wa
 4. Follow the on-screen instructions to mark attendance or manage events
 
 ## Technologies Used
-- Full Stack Application : Next.JS 14.2.3
+- Full Stack Application : [Next.JS 14.2.3](https://nextjs.org/)
 - Database: [Neon Database](https://neon.tech/), [Google Cloud Storage Bucket](https://cloud.google.com/storage/docs/creating-buckets)
 - Node JS: 20.15.1 using [Node Version Manager](https://github.com/nvm-sh/nvm)
 - Face-api.js from [vladmandic/face-api](https://github.com/vladmandic/face-api)
