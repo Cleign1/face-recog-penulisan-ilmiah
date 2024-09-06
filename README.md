@@ -55,6 +55,8 @@ We welcome contributions to improve the application. Please follow these steps:
 Ibnu Khaidar - [ibnukhaidar@gmail.com](mailto:ibnukhaidar@gmail.com)
 
 Project Link: [ibnukhaidar-pi.com](https://ibnukhaidar-pi.com)
+
 Test Username and Password:
-Username : mahasiswa
-Password : 12345678
+
+- Username : mahasiswa
+- Password : 12345678
