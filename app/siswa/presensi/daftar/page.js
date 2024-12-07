@@ -6,7 +6,7 @@ const FaceRecognition = dynamic(() => import('@/components/FaceRecognition'), {
 
 export default function DaftarPresensi() {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-r from-[#FFD659] to-[#FFFFFF] flex flex-col items-center justify-center p-6">
       <FaceRecognition />
     </div>
   );
