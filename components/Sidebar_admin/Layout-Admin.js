@@ -3,10 +3,11 @@ import { SidebarAdmin } from "./Sidebar-Admin";
 
 export const LayoutAdmin = ({ children }) => {
   return (
-    <div className="h-screen flex flex-grow justify-start">
+    <div className="min-h-screen flex">
       <SidebarAdmin/>
-      <div className="bg-gradient-to-br from-rose-100 to-sky-200 flex-1 p-4 text-white">
-        {children}
+      <div className="flex flex-1 bg-gradient-to-br from-[#FFD659] to-[#FFFFFF] p-4 text-white">
+        <div className="w-full">{children}
+        </div>
       </div>
     </div>
   );

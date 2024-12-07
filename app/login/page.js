@@ -97,7 +97,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-100 to-sky-100">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#FFD659] to-[#FFFFFF]">
       <Toaster richColors />
       <Head>
         <title>Login Page</title>

@@ -9,7 +9,9 @@ export default function DashboardAdmin() {
 
   if (status === "loading") {
     return (
-      <div className="items-center text-center p-96 text-2xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
     );
   }
 
@@ -22,7 +24,7 @@ export default function DashboardAdmin() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
       <LayoutAdmin>
         <div className="p-6 text-black">
           <h1 className="text-2xl font-bold mb-8">

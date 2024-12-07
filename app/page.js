@@ -22,7 +22,7 @@ export default function Home() {
   }, [session, router]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center pt-20 bg-gradient-to-br from-rose-100 to-sky-200">
+    <main className="flex-1 min-h-screen items-center justify-center pt-20 bg-gradient-to-br from-[#FFD659] to-[#FFFFFF]">
       <div className="flex items-center justify-center flex-col space-y-2">
         <div className="pb-5">
           <h1 className="text-3xl">Halaman Penghubung</h1>

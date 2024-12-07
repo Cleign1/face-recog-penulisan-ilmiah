@@ -3,6 +3,8 @@ import { LayoutDosen } from "@/components/Sidebar_dosen/Layout-Dosen";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useState, useEffect } from "react";
+import { Toaster } from "sonner";
+import { toast } from "sonner";
 
 export default function DashboardDosen() {
   const { data: session, status } = useSession();
@@ -24,19 +26,29 @@ export default function DashboardDosen() {
       }
       const data = await response.json();
       setDashboardData(data);
+      toast.success("Berhasil memuat data");
     } catch (err) {
       setError(err.message);
+      toast.error(`Error: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   if (status === "loading" || loading) {
-    return <div className="items-center text-center p-96 text-2xl">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   if (status === "unauthenticated") {
-    return <div className="items-center text-center p-96 text-2xl">Not authenticated</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl md:text-2xl text-red-500">Not authenticated</div>
+      </div>
+    );
   }
 
   if (error) {
@@ -44,7 +56,8 @@ export default function DashboardDosen() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
+      <Toaster richColors/>
       <LayoutDosen>
         <Head>
           <title>Dosen Dashboard</title>
@@ -53,26 +66,26 @@ export default function DashboardDosen() {
           <h1 className="text-2xl font-bold mb-8">
             Selamat Datang, Dosen {session.user?.username}!
           </h1>
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">📅</div>
-              <div className="text-xl font-semibold">Tanggal</div>
-              <div className="text-2xl mt-2">{dashboardData?.tanggal || 'N/A'}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 md:mb-8">
+            <div className="flex flex-col items-center rounded-lg p-4 bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="text-3xl md:text-4xl mb-2">📅</div>
+              <div className="text-lg md:text-xl font-semibold text-gray-700">Tanggal</div>
+              <div className="text-xl md:text-2xl mt-2 text-gray-900">{dashboardData?.tanggal || 'N/A'}</div>
             </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">🎓</div>
-              <div className="text-xl font-semibold">Kelas</div>
-              <div className="text-2xl mt-2">{dashboardData?.kelas || 'N/A'}</div>
+            <div className="flex flex-col items-center rounded-lg p-4 bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="text-3xl md:text-4xl mb-2">🎓</div>
+              <div className="text-lg md:text-xl font-semibold text-gray-700">Kelas</div>
+              <div className="text-xl md:text-2xl mt-2 text-gray-900">{dashboardData?.kelas || 'N/A'}</div>
             </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">👥</div>
-              <div className="text-xl font-semibold">Total Siswa</div>
-              <div className="text-2xl mt-2">{dashboardData?.totalSiswa || 0}</div>
+            <div className="flex flex-col items-center rounded-lg p-4 bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="text-3xl md:text-4xl mb-2">👥</div>
+              <div className="text-lg md:text-xl font-semibold text-gray-700">Total Siswa</div>
+              <div className="text-xl md:text-2xl mt-2 text-gray-900">{dashboardData?.totalSiswa || 0}</div>
             </div>
-            <div className="flex flex-col items-center p-4 bg-gray-100 rounded shadow">
-              <div className="text-4xl mb-2">✔️</div>
-              <div className="text-xl font-semibold">Total Presensi</div>
-              <div className="text-2xl mt-2">{dashboardData?.totalPresensi || 0}</div>
+            <div className="flex flex-col items-center rounded-lg p-4 bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="text-3xl md:text-4xl mb-2">✔️</div>
+              <div className="text-lg md:text-xl font-semibold text-gray-700">Total Presensi</div>
+              <div className="text-xl md:text-2xl mt-2 text-gray-900">{dashboardData?.totalPresensi || 0}</div>
             </div>
           </div>
           {/* You can add a table or list here to display the presensi data if needed */}
