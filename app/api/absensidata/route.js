@@ -1,18 +1,8 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { Storage } from '@google-cloud/storage';
+import { deleteObjectFromR2, getObjectKeyFromUrl, uploadBase64ImageToR2 } from "@/lib/r2";
 
 export const dynamic = 'force-dynamic';
-
-const storage = new Storage({
-    projectId: process.env.PROJECT_ID,
-    credentials: {
-      client_email: process.env.CLIENT_EMAIL,
-      private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n"),
-    }
-});
-
-const bucketName = process.env.BUCKET_NAME;
 
 export async function GET(req) {
     try {
@@ -38,11 +28,7 @@ export async function POST(req) {
         let imageUrl = null;
         if (imageData) {
             const fileName = `${npm}_${Date.now()}.jpg`;
-            const file = storage.bucket(bucketName).file(`absensi_proof/${fileName}`);
-            await file.save(Buffer.from(imageData.split(',')[1], 'base64'), {
-                metadata: { contentType: 'image/jpeg' }
-            });
-            imageUrl = `https://storage.googleapis.com/${bucketName}/absensi_proof/${fileName}`;
+            imageUrl = await uploadBase64ImageToR2(imageData, `absensi_proof/${fileName}`);
         }
 
         const newPresensi = await db.presensi.create({
@@ -78,13 +64,12 @@ export async function DELETE(req) {
         }
 
         if (presensi.imageUrl) {
-            const fileName = presensi.imageUrl.split('/').pop();
-            const file = storage.bucket(bucketName).file(`absensi_proof/${fileName}`);
+            const objectKey = getObjectKeyFromUrl(presensi.imageUrl, "absensi_proof");
             try {
-                await file.delete();
-                console.log(`File ${fileName} deleted from Google Cloud Storage.`);
+                await deleteObjectFromR2(objectKey);
+                console.log(`File ${objectKey} deleted from Cloudflare R2.`);
             } catch (deleteError) {
-                console.error('Error deleting file from Google Cloud Storage:', deleteError);
+                console.error('Error deleting file from Cloudflare R2:', deleteError);
             }
         }
 

@@ -1,46 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { Storage } from '@google-cloud/storage';
+import { uploadBase64ImageToR2 } from '@/lib/r2';
 import { v4 as uuidv4 } from 'uuid';
-
-const storage = new Storage({
-  projectId: process.env.PROJECT_ID,
-  credentials: {
-    client_email: process.env.CLIENT_EMAIL,
-    private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n"),
-    bucket: process.env.BUCKET_NAME
-  }
-});
-
-const bucket = storage.bucket(process.env.BUCKET_NAME);
-
-async function uploadToGoogleCloudStorage(imageData, fileName) {
-  const file = bucket.file(`absensi_proof/${fileName}`);  // Changed folder name to 'absensi_proof'
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: 'image/jpeg',
-    },
-    predefinedAcl: 'publicRead',
-  });
-
-  return new Promise((resolve, reject) => {
-    stream.on('error', (err) => {
-      reject(err);
-    });
-
-    stream.on('finish', async () => {
-      // Make the file publicly readable
-      await file.makePublic();
-      // Get the public URL
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
-      resolve(publicUrl);
-    });
-
-    // Write the base64 image data to the stream
-    const buffer = Buffer.from(imageData.split(',')[1], 'base64');
-    stream.end(buffer);
-  });
-}
 
 export async function POST(request) {
   try {
@@ -81,7 +42,7 @@ export async function POST(request) {
     }
 
     const fileName = `${npm}_${uuidv4()}.jpg`;
-    const imageUrl = await uploadToGoogleCloudStorage(imageData, fileName);
+    const imageUrl = await uploadBase64ImageToR2(imageData, `absensi_proof/${fileName}`);
 
     const newAttendance = await db.presensi.create({
       data: {
