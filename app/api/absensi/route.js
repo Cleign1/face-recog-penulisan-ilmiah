@@ -1,20 +1,9 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { Storage } from '@google-cloud/storage';
+import { deleteObjectFromR2, getObjectKeyFromUrl } from "@/lib/r2";
 
 export const dynamic = 'force-dynamic';
-
-
-const storage = new Storage({
-    projectId: process.env.PROJECT_ID,
-    credentials: {
-      client_email: process.env.CLIENT_EMAIL,
-      private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n"),
-    }
-});
-
-const bucketName = process.env.BUCKET_NAME;
 
 // API untuk membuat data absensi (POST)
 export async function POST(req) {
@@ -109,15 +98,13 @@ export async function DELETE(req) {
 
         // Delete the image from Google Cloud Storage
         if (absensi.imageUrl) {
-            const fileName = absensi.imageUrl.split('/').pop();
-            const bucket = storage.bucket(bucketName);
-            const file = bucket.file(`absensi_proof/${fileName}`);
+            const objectKey = getObjectKeyFromUrl(absensi.imageUrl, "absensi_proof");
 
             try {
-                await file.delete();
-                console.log(`File ${fileName} deleted successfully from Google Cloud Storage.`);
+                await deleteObjectFromR2(objectKey);
+                console.log(`File ${objectKey} deleted successfully from Cloudflare R2.`);
             } catch (deleteError) {
-                console.error('Error deleting file from Google Cloud Storage:', deleteError);
+                console.error('Error deleting file from Cloudflare R2:', deleteError);
                 // Continue with database deletion even if image deletion fails
             }
         }
