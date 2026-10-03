@@ -1,0 +1,27 @@
+diff --git a/scripts/resources.js b/scripts/resources.js
+index 0611d8f9a39552c79d588b27c7460df609d722b2..1b9550dc37d12031362f9c297052f16e1019c1fa 100644
+--- a/scripts/resources.js
++++ b/scripts/resources.js
+@@ -79,8 +79,21 @@ async function downloadAndUnpackResource(uri, destPath, callback) {
+             }
+           });
+     } else if (uri.endsWith('.tar.gz')) {
++      const libraryLinks = new Map();
+       response.on('data', chunk => bar.tick(chunk.length))
+-          .pipe(tar.x({C: destPath, strict: true}))
++          .pipe(tar.x({
++            C: destPath,
++            strict: true,
++            filter: (entryPath, entry) => {
++              if (entry.type === 'SymbolicLink' &&
++                  /^lib\/libtensorflow(?:_framework)?\.so(?:\.2)?$/.test(
++                      entryPath.replace(/^\.\//, ''))) {
++                entry.linkpath = libraryLinks.get(entry.linkpath) || entry.linkpath;
++                libraryLinks.set(entryPath.split('/').pop(), entry.linkpath);
++              }
++              return true;
++            }
++          }))
+           .on('close', () => {
+             if (callback !== undefined) {
+               callback();
