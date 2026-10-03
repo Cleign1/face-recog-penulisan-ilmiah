@@ -9,6 +9,10 @@
     "start": "next start",
     "startip": "next start -H 0.0.0.0 -p 80",
     "lint": "next lint",
+    "test": "node --test tests/client-boundaries.test.cjs tests/dependency-runtime.test.cjs tests/docker-install.test.cjs tests/tensorflow-installer.test.cjs",
+    "test:integration": "node --test tests/dependency-integration.test.cjs",
+    "test:native": "node -e \"const tf = require('@tensorflow/tfjs-node'); const t = tf.tensor([1, 2]); if (t.sum().dataSync()[0] !== 3) process.exit(1); tf.disposeVariables();\"",
+    "check:dependabot": "node scripts/check-dependabot.cjs",
     "postinstall": "pnpm exec prisma generate"
   },
   "dependencies": {
@@ -22,25 +26,54 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "lucide-react": "^0.395.0",
-    "next": "14.2.20",
-    "next-auth": "^4.24.7",
+    "next": "15.5.24",
+    "next-auth": "^4.24.15",
     "node-gyp": "^10.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-webcam": "^7.2.0",
-    "sharp": "^0.33.4",
+    "sharp": "^0.35.5",
     "sonner": "^1.5.0",
-    "sweetalert2": "^11.12.2",
+    "sweetalert2": "^11.26.25",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^10.0.0",
+    "uuid": "^11.1.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.3",
-    "postcss": "^8.4.39",
+    "eslint-config-next": "15.5.24",
+    "postcss": "^8.5.28",
     "prisma": "^6.0.1",
     "tailwindcss": "^3.4.4"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/runtime@<7.26.10": "^7.26.10",
+      "adm-zip@<0.6.1": "0.6.1",
+      "ajv@<6.14.0": "^6.14.0",
+      "brace-expansion@<2": "1.1.21",
+      "brace-expansion@>=2 <3": "2.1.7",
+      "form-data@>=4 <4.0.6": "^4.0.6",
+      "fast-xml-parser@>=5 <5.7.0": "^5.7.0",
+      "fast-xml-builder@<1.1.7": "^1.1.7",
+      "ip-address@<10.7.1": "10.7.1",
+      "js-yaml@>=4 <4.3.2": "^4.3.2",
+      "nanoid@<3.3.18": "3.3.18",
+      "picomatch@<2.3.2": "^2.3.2",
+      "postcss@<8.5.23": "^8.5.23",
+      "postcss-selector-parser@>=6.1.0 <6.1.3": "^6.1.3",
+      "sharp@<0.35.4": "0.35.4",
+      "tar@<7.5.22": "7.5.22",
+      "uuid@<11.1.1": "11.1.1",
+      "yaml@>=2 <2.8.3": "^2.8.3"
+    },
+    "patchedDependencies": {
+      "@tensorflow/tfjs-node@4.20.0": "patches/@tensorflow__tfjs-node@4.20.0.patch"
+    }
   }
 }
